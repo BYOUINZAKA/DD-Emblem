@@ -5,7 +5,7 @@ import json
 
 class Navigator:
     def __init__(self, searchMsg):
-        self.LiveRooms = []
+        self.LiveRoomList = []
         self.Count = 0
         self.SearchMsg = searchMsg
 
@@ -28,7 +28,7 @@ class Navigator:
                 for roomData in roomList:
                     try:
                         if roomData.get('pendant_info').get('2').get('content') == keyWord:
-                            self.LiveRooms.append(roomData.get('roomid'))
+                            self.LiveRoomList.append(roomData.get('roomid'))
                             self.Count += 1
                             if self.Count-baseCount > count:
                                 return
