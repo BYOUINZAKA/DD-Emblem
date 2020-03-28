@@ -28,7 +28,8 @@ class Navigator:
                 for roomData in roomList:
                     try:
                         if roomData.get('pendant_info').get('2').get('content') == keyWord:
-                            self.LiveRoomList.append(roomData.get('roomid'))
+                            self.LiveRoomList.append(
+                                "https://live.bilibili.com/"+roomData.get('roomid'))
                             self.Count += 1
                             if self.Count-baseCount > count:
                                 return
