@@ -53,13 +53,13 @@ class Navigator:
                 url = target % (page)
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, headers=headers) as res:
-                        # 请求成功则异步拉取json报文。
+                        # 请求成功则异步拉取Json报文。
                         if res.status == 200:
                             response = json.loads(await res.text())
                         else:
                             continue
                 roomList = response.get('data').get('list')
-                # 如果显示正在抽奖的关键字，则根据直播间ID生成链接。
+                # 如果显示正在抽奖的关键字，则读取直播间信息，并根据直播间ID生成链接。
                 for roomData in roomList:
                     try:
                         if roomData.get('pendant_info').get('2').get('content') == keyWord:
