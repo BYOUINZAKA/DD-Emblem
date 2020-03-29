@@ -8,6 +8,8 @@ class Navigator:
     """ 可抽奖直播间的信息读取和储存的类
 
     Members: 
+        EventLoop: 事件循环。
+        TaskList: 任务列表。
         LiveRoomList: 储存抽奖直播间信息的列表，元素皆为一个字典，结构为：
             {
                 'roomid': '...',            # 直播间id。
@@ -47,6 +49,8 @@ class Navigator:
         """
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
+        self.EventLoop = asyncio.get_event_loop()
+        self.TaskList = []
 
     def Push(self, roomId: str, urId: str, parentId: str, areaId: str, url: str) -> dict:
         dic = {
@@ -59,54 +63,59 @@ class Navigator:
         self.LiveRoomList.append(dic)
         return dic
 
-    async def Loads(self, headers='', basePage=1, topPage=3, count=-1) -> str:
+    async def LoadPage(self, target, page, keyWord, headers):
+        response = {}
+        url = target % (page)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers) as res:
+                # 请求成功则异步拉取Json报文。
+                if res.status == 200:
+                    response = json.loads(await res.text())
+                else:
+                    return 'bad_request'
+        roomList = response.get('data').get('list')
+        # 如果超过了最大页数，接收的roomList的长度则为0。
+        if len(roomList) == 0:
+            pass
+        # 如果显示正在抽奖的关键字，则读取直播间信息，并根据直播间ID生成链接。
+        for roomData in roomList:
+            try:
+                if roomData.get('pendant_info').get('2').get('content') == keyWord:
+                    self.LiveRoomList.append({
+                        'roomid': roomData.get('roomid'),
+                        'urid': roomData.get('uid'),
+                        'parent_id': roomData.get('parent_id'),
+                        'area_id': roomData.get('area_id'),
+                        'url': "https://live.bilibili.com%s" % (roomData.get('link'))
+                    })
+                else:
+                    continue
+            except:
+                continue
+
+    def Loads(self, headers='', basePage=1, topPage=3) -> str:
         """ 加载容器内容的函数
+        函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
 
         Args:
-            headers: HTTP请求头。
+            headers: HTTP请求头，本函数中可为空。
             basePage: 从哪一页开始读取。
             topPage: 最大读取到哪一页。
-            count: 读取的抽奖直播间总数，传入-1时表示不设限制。
 
         Returns:
             无返回值。
 
         Raises:
-            NavigatorRangeError:
+            # 未实现
+            NavigatorRangeError: 当topPage低于basePage时抛出
         """
         baseCount = len(self.LiveRoomList)
         keyWord = self.SearchMsg.get('keyword')
         targets = self.SearchMsg.get('targets')
+        # 循环构筑协程
         for area in targets:
             target = area.get('url')
             for page in range(basePage, topPage+1):
-                response = {}
-                url = target % (page)
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(url, headers=headers) as res:
-                        # 请求成功则异步拉取Json报文。
-                        if res.status == 200:
-                            response = json.loads(await res.text())
-                        else:
-                            continue
-                roomList = response.get('data').get('list')
-                # 如果超过了最大页数，接收的roomList的长度则为0。
-                if len(roomList) == 0:
-                    pass
-                # 如果显示正在抽奖的关键字，则读取直播间信息，并根据直播间ID生成链接。
-                for roomData in roomList:
-                    try:
-                        if roomData.get('pendant_info').get('2').get('content') == keyWord:
-                            self.LiveRoomList.append({
-                                'roomid': roomData.get('roomid'),
-                                'urid': roomData.get('uid'),
-                                'parent_id': roomData.get('parent_id'),
-                                'area_id': roomData.get('area_id'),
-                                'url': "https://live.bilibili.com%s" % (roomData.get('link'))
-                            })
-                            if count != -1 and len(self.LiveRoomList)-baseCount > count:
-                                return
-                        else:
-                            continue
-                    except:
-                        continue
+                self.TaskList.append(self.EventLoop.create_task(
+                    self.LoadPage(target, page, keyWord, headers)))
+        self.EventLoop.run_until_complete(asyncio.wait(self.TaskList))

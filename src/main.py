@@ -1,25 +1,22 @@
 import asyncio
 import json
 
-import aiofiles
+# import aiofiles
+# 已弃用
 import aiohttp
 
-import Base
+from Base import Navigator
 
 
-async def getSearchMsg(path: str) -> dict:
-    async with aiofiles.open(path, encoding='utf-8') as file:
-        contents = await file.read()
+def getSearchMsg(path: str) -> dict:
+    with open(path, encoding='utf-8') as file:
+        contents = file.read()
     return json.loads(contents)
 
 
-async def main():
-    navi = Base.Navigator(await getSearchMsg('SearchMsg.json'))
-    await navi.Loads(topPage=5)
-    print(len(navi.LiveRoomList))
+if __name__ == '__main__':
+    navi = Navigator(getSearchMsg('SearchMsg.json'))
+    navi.Loads(topPage=(int(input("输入最大页数："))))
+    print("可抽奖直播间数量为：%d" % len(navi.LiveRoomList))
     for i in navi.LiveRoomList:
         print(i)
-
-loop = asyncio.get_event_loop()
-task = loop.create_task(main())
-loop.run_until_complete(task)
