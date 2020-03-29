@@ -102,7 +102,7 @@ class Navigator:
                                 'urid': roomData.get('uid'),
                                 'parent_id': roomData.get('parent_id'),
                                 'area_id': roomData.get('area_id'),
-                                'url': "https://live.bilibili.com/%s" % (roomData.get('roomid'))
+                                'url': "https://live.bilibili.com%s" % (roomData.get('link'))
                             })
                             if count != -1 and len(self.LiveRoomList)-baseCount > count:
                                 return

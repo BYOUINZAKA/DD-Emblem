@@ -16,6 +16,7 @@ async def getSearchMsg(path: str) -> dict:
 async def main():
     navi = Base.Navigator(await getSearchMsg('SearchMsg.json'))
     await navi.Loads(topPage=5)
+    print(len(navi.LiveRoomList))
     for i in navi.LiveRoomList:
         print(i)
 
