@@ -45,7 +45,7 @@ class Navigator:
                     ]
                 }
 
-        Attention: 并不会对searchMsg的格式进行检索并抛出异常。
+        Attention: 并不会对searchMsg的格式进行检索或抛出异常。
         """
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
@@ -65,15 +65,21 @@ class Navigator:
             无返回值。
 
         Raises:
-            # 未实现
-            NavigatorRangeError: 当topPage低于basePage时抛出
+            KeyError: SearchMsg的内容有误时抛出。
+            NavigatorRangeError: 未实现，当topPage低于basePage时抛出。
         """
         baseCount = len(self.LiveRoomList)
-        keyWord = self.SearchMsg.get('keyword')
-        targets = self.SearchMsg.get('targets')
+        try:
+            keyWord = self.SearchMsg.get('keyword')
+            targets = self.SearchMsg.get('targets')
+        except:
+            raise KeyError
         # 循环构筑协程
         for area in targets:
-            target = area.get('url')
+            try:
+                target = area.get('url')
+            except:
+                raise KeyError
             for page in range(basePage, topPage+1):
                 self.TaskList.append(self.EventLoop.create_task(
                     self.LoadPage(target, page, keyWord, headers)))
@@ -95,7 +101,7 @@ class Navigator:
         url = target % (page)
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as res:
-                # 请求成功则异步拉取Json报文。
+                # 请求成功则拉取Json报文。
                 if res.status == 200:
                     response = json.loads(await res.text())
                 else:
