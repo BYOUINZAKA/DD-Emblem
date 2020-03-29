@@ -2,11 +2,11 @@
     "keyword": "正在抽奖",  
     "targets": [
         {
-            "name": "xxx",
+            "name": "娱乐",
             "url": "https://www.baidu.com"
         },
         {
-            "name": "yyy",
+            "name": "网游",
             "url": "https://yyy/yyy/..."
         }
     ]
