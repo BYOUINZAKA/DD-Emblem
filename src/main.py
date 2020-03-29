@@ -36,5 +36,4 @@ loop = asyncio.get_event_loop()
 task = loop.create_task(main())
 loop.run_until_complete(task)
 
-bbb = Base.Navigator(None)
-print(type(bbb))
+print(range(3,1))

@@ -22,12 +22,12 @@ class Navigator:
             2、识别直播间中抽奖信息的数量和类型。
     """
 
-    def __init__(self, searchMsg):
+    def __init__(self, searchMsg: dict):
         """ 构造器
         接收一个代表检索方式信息的字典作为参数，并建立空对象。
 
         Args:
-            searchMsg: 描述检索方式的信息，应为一个字典，可通过json报文转化所得，并满足以下结构：
+            searchMsg: 描述检索方式的信息，应为一个字典，可通过SearchMsg.json转化所得，并满足以下结构：
                 {
                     "keyword": "正在抽奖",  # 检索关键词，通常为正在抽奖。
                     "targets": [    # 检索目标的地址列表，一般为bilibili各直播大区。
@@ -59,7 +59,21 @@ class Navigator:
         self.LiveRoomList.append(dic)
         return dic
 
-    async def Loads(self, headers, basePage=1, topPage=3, count=-1):
+    async def Loads(self, headers, basePage=1, topPage=3, count=-1) -> str:
+        """ 加载容器内容的函数
+
+        Args:
+            headers: HTTP请求头。
+            basePage: 从哪一页开始读取。
+            topPage: 最大读取到哪一页。
+            count: 读取的抽奖直播间总数，传入-1时表示不设限制。
+
+        Returns:
+            无返回值。
+
+        Raises:
+            NavigatorRangeError:
+        """
         baseCount = len(self.LiveRoomList)
         keyWord = self.SearchMsg.get('keyword')
         targets = self.SearchMsg.get('targets')
@@ -70,12 +84,15 @@ class Navigator:
                 url = target % (page)
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, headers=headers) as res:
-                        # 请求成功则异步拉取 Json报文。
+                        # 请求成功则异步拉取Json报文。
                         if res.status == 200:
                             response = json.loads(await res.text())
                         else:
                             continue
                 roomList = response.get('data').get('list')
+                # 如果超过了最大页数，接收的roomList的长度则为0。
+                if len(roomList) == 0:
+                    pass
                 # 如果显示正在抽奖的关键字，则读取直播间信息，并根据直播间ID生成链接。
                 for roomData in roomList:
                     try:
