@@ -11,8 +11,8 @@ class Navigator:
         Args:
             searchMsg: 描述检索方式的信息，应为一个字典，可通过json报文转化所得，并满足以下结构：
                 {
-                    "keyword": "正在抽奖",               //检索关键词，通常为正在抽奖。
-                    "targets": [                        //检索目标的地址列表，一般为bilibili各直播大区。
+                    "keyword": "正在抽奖",  //检索关键词，通常为正在抽奖。
+                    "targets": [    //检索目标的地址列表，一般为bilibili各直播大区。
                         {
                             "name": "...",
                             "url: "https://.../..."
