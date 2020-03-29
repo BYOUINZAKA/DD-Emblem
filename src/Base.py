@@ -70,7 +70,7 @@ class Navigator:
                 url = target % (page)
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, headers=headers) as res:
-                        # 请求成功则异步拉取Json报文。
+                        # 请求成功则异步拉取 Json报文。
                         if res.status == 200:
                             response = json.loads(await res.text())
                         else:
