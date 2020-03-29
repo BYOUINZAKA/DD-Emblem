@@ -31,6 +31,17 @@ class Navigator:
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
 
+    def Push(self, roomId, urId, parentId, areaId, url):
+        dic = {
+            'roomid': roomId,
+            'urid': urId,
+            'parent_id': parentId,
+            'area_id': areaId,
+            'url': url
+        }
+        self.LiveRoomList.append(dic)
+        return dic
+
     async def Loads(self, headers, basePage=1, topPage=3, count=-1):
         baseCount = len(self.LiveRoomList)
         keyWord = self.SearchMsg.get('keyword')
@@ -59,8 +70,7 @@ class Navigator:
                                 'area_id': roomData.get('area_id'),
                                 'url': "https://live.bilibili.com/%s" % (roomData.get('roomid'))
                             })
-                            self.Count += 1
-                            if self.Count-baseCount > count:
+                            if len(self.LiveRoomList)-baseCount > count:
                                 return
                         else:
                             continue
