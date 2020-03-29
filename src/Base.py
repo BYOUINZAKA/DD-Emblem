@@ -1,6 +1,7 @@
 import asyncio
-import aiohttp
 import json
+
+import aiohttp
 
 
 class Navigator:
@@ -47,7 +48,7 @@ class Navigator:
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
 
-    def Push(self, roomId, urId, parentId, areaId, url):
+    def Push(self, roomId: str, urId: str, parentId: str, areaId: str, url: str):
         dic = {
             'roomid': roomId,
             'urid': urId,
