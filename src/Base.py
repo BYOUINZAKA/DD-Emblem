@@ -4,8 +4,25 @@ import json
 
 
 class Navigator:
+    """ 可抽奖直播间的信息读取和储存的类
+
+    Members: 
+        LiveRoomList: 储存抽奖直播间信息的列表，元素皆为一个字典，结构为：
+            {
+                'roomid': '...',            # 直播间id。
+                'urid': '...',              # 我也不知道这是什么，似乎是up主的id。
+                'parent_id': '...'          # 大区所在id。
+                'area_id': '...'            # 小分区id。
+                'url': "https://xxx/..."    # 直播间链接。
+            }
+        SearchMsg: 检索方式信息。
+
+    Future: 1、区分一个直播间的奖品是否已被成功领取。
+            2、识别直播间中抽奖信息的数量和类型。
+    """
+
     def __init__(self, searchMsg):
-        """构造函数
+        """ 构造器
         接收一个代表检索方式信息的字典作为参数，并建立空对象。
 
         Args:
@@ -14,19 +31,18 @@ class Navigator:
                     "keyword": "正在抽奖",  # 检索关键词，通常为正在抽奖。
                     "targets": [    # 检索目标的地址列表，一般为bilibili各直播大区。
                         {
-                            "name": "...",
-                            "url: "https://.../..."
+                            "name": "xxx",
+                            "url: "https://xxx/..."
                         },
                         {
-                            "name": "...",
-                            "url: "https://.../.../..."
+                            "name": "yyy",
+                            "url: "https://yyy/yyy/..."
                         }
                         # ...
                     ]
                 }
 
-        Raises:
-            并不会检索searchMsg的格式并抛出异常。
+        Attention: 并不会对searchMsg的格式进行检索并抛出异常。
         """
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
