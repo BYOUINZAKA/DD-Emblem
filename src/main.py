@@ -9,14 +9,15 @@ import aiohttp
 from Base import Navigator
 
 
-def getSearchMsg(path: str) -> dict:
+def getMsgFromJsonFile(path: str) -> dict:
     with open(path, encoding='utf-8') as file:
         contents = file.read()
     return json.loads(contents)
 
 
 if __name__ == '__main__':
-    navi = Navigator(getSearchMsg('SearchMsg.json'))
+    headers = getMsgFromJsonFile('Headers.json')
+    navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
     start = time.time()
     navi.Loads(topPage=(int(input("输入最大页数："))))
     end = time.time()

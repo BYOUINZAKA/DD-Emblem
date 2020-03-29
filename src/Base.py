@@ -13,7 +13,7 @@ class Navigator:
         LiveRoomList: 储存抽奖直播间信息的列表，元素皆为一个字典，结构为：
             {
                 'roomid': '...',            # 直播间id。
-                'urid': '...',              # 我也不知道这是什么，似乎是up主的id。
+                'ruid': '...',              # 我也不知道这是什么，似乎是up主的id。
                 'parent_id': '...'          # 大区所在id。
                 'area_id': '...'            # 小分区id。
                 'url': "https://xxx/..."    # 直播间链接。
@@ -68,7 +68,6 @@ class Navigator:
             KeyError: SearchMsg的内容有误时抛出。
             NavigatorRangeError: 未实现，当topPage低于basePage时抛出。
         """
-        baseCount = len(self.LiveRoomList)
         try:
             keyWord = self.SearchMsg.get('keyword')
             targets = self.SearchMsg.get('targets')
@@ -85,10 +84,10 @@ class Navigator:
                     self.LoadPage(target, page, keyWord, headers)))
         self.EventLoop.run_until_complete(asyncio.wait(self.TaskList))
 
-    def Push(self, roomId: str, urId: str, parentId: str, areaId: str, url: str) -> dict:
+    def Push(self, roomId: str, ruId: str, parentId: str, areaId: str, url: str) -> dict:
         dic = {
             'roomid': roomId,
-            'urid': urId,
+            'ruid': ruId,
             'parent_id': parentId,
             'area_id': areaId,
             'url': url
@@ -116,7 +115,7 @@ class Navigator:
                 if roomData.get('pendant_info').get('2').get('content') == keyWord:
                     self.LiveRoomList.append({
                         'roomid': roomData.get('roomid'),
-                        'urid': roomData.get('uid'),
+                        'ruid': roomData.get('uid'),
                         'parent_id': roomData.get('parent_id'),
                         'area_id': roomData.get('area_id'),
                         'url': "https://live.bilibili.com%s" % (roomData.get('link'))
