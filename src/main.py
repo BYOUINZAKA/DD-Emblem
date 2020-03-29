@@ -1,14 +1,22 @@
 import asyncio
 import json
 
+import aiofiles
 import aiohttp
 
 import Base
 
 
+async def getSearchMsg(path: str) -> dict:
+    async with aiofiles.open(path, encoding='utf-8') as file:
+        contents = await file.read()
+    return json.loads(contents)
+
+
 async def main():
     # url = 'https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=5&cate_id=0&area_id=0&sort_type=sort_type_8&page=1&page_size=30&tag_version=1'
     url = "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=3&cate_id=0&area_id=0&sort_type=sort_type_121&page=2&page_size=30&tag_version=1"
+    print(await getSearchMsg('SearchMsg.json'))
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as res:
             print(res.status)
@@ -35,5 +43,3 @@ async def main():
 loop = asyncio.get_event_loop()
 task = loop.create_task(main())
 loop.run_until_complete(task)
-
-print(range(3,1))

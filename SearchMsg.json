@@ -1,13 +1,29 @@
 {
-    "keyword": "正在抽奖",  
+    "keyword": "正在抽奖",
     "targets": [
         {
             "name": "娱乐",
-            "url": "https://www.baidu.com"
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=1&cate_id=0&area_id=0&sort_type=sort_type_152&page=%d&page_size=30&tag_version=1"
+        },
+        {
+            "name": "手游",
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=3&cate_id=0&area_id=0&sort_type=sort_type_121&page=%d&page_size=30&tag_version=1"
+        },
+        {
+            "name": "电台",
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=5&cate_id=0&area_id=0&sort_type=sort_type_8&page=%d&page_size=30&tag_version=1"
         },
         {
             "name": "网游",
-            "url": "https://yyy/yyy/..."
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=2&cate_id=0&area_id=0&sort_type=sort_type_124&page=%d&page_size=30&tag_version=1"
+        },
+        {
+            "name": "单机",
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=6&cate_id=0&area_id=0&sort_type=sort_type_125&page=%d&page_size=30&tag_version=1"
+        },
+        {
+            "name": "绘画",
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=4&cate_id=0&area_id=0&sort_type=sort_type_56&page=%d&page_size=30&tag_version=1"
         }
     ]
 }
