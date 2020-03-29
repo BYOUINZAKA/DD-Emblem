@@ -15,7 +15,7 @@ class Navigator:
                 'area_id': '...'            # 小分区id。
                 'url': "https://xxx/..."    # 直播间链接。
             }
-        SearchMsg: 检索方式信息。
+        SearchMsg: 检索方式信息。 
 
     Future: 1、区分一个直播间的奖品是否已被成功领取。
             2、识别直播间中抽奖信息的数量和类型。
