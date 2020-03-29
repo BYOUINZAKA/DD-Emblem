@@ -32,11 +32,11 @@ class Navigator:
                     "targets": [    # 检索目标的地址列表，一般为bilibili各直播大区。
                         {
                             "name": "xxx",
-                            "url: "https://xxx/..."
+                            "url": "https://xxx/..."
                         },
                         {
                             "name": "yyy",
-                            "url: "https://yyy/yyy/..."
+                            "url": "https://yyy/yyy/..."
                         }
                         # ...
                     ]

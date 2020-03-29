@@ -1,0 +1,13 @@
+{
+    "keyword": "正在抽奖",  
+    "targets": [
+        {
+            "name": "xxx",
+            "url": "https://www.baidu.com"
+        },
+        {
+            "name": "yyy",
+            "url": "https://yyy/yyy/..."
+        }
+    ]
+}
