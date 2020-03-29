@@ -16,4 +16,8 @@ class Catcher():
         return 0
 
     async def Dispose(self, liverMsg: dict) -> int:
-        return 0
+        """ HTTP请求方式的亲密度领取函数
+        按照b站的API来看，需要先请求一次权限，第二次请求才能得到舰队抽奖的id，接着再通过id来发出post请求。
+
+        """
+        

@@ -48,7 +48,7 @@ class Navigator:
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
 
-    def Push(self, roomId: str, urId: str, parentId: str, areaId: str, url: str):
+    def Push(self, roomId: str, urId: str, parentId: str, areaId: str, url: str) -> dict:
         dic = {
             'roomid': roomId,
             'urid': urId,
@@ -59,7 +59,7 @@ class Navigator:
         self.LiveRoomList.append(dic)
         return dic
 
-    async def Loads(self, headers, basePage=1, topPage=3, count=-1) -> str:
+    async def Loads(self, headers='', basePage=1, topPage=3, count=-1) -> str:
         """ 加载容器内容的函数
 
         Args:
@@ -78,7 +78,7 @@ class Navigator:
         keyWord = self.SearchMsg.get('keyword')
         targets = self.SearchMsg.get('targets')
         for area in targets:
-            target = targets.get(area).get('url')
+            target = area.get('url')
             for page in range(basePage, topPage+1):
                 response = {}
                 url = target % (page)
@@ -104,7 +104,7 @@ class Navigator:
                                 'area_id': roomData.get('area_id'),
                                 'url': "https://live.bilibili.com/%s" % (roomData.get('roomid'))
                             })
-                            if len(self.LiveRoomList)-baseCount > count:
+                            if count != -1 and len(self.LiveRoomList)-baseCount > count:
                                 return
                         else:
                             continue
