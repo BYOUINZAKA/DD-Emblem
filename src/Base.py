@@ -52,6 +52,33 @@ class Navigator:
         self.EventLoop = asyncio.get_event_loop()
         self.TaskList = []
 
+    def Loads(self, headers='', basePage=1, topPage=3) -> str:
+        """ 加载容器内容的函数
+        函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
+
+        Args:
+            headers: HTTP请求头，本函数中可为空。
+            basePage: 从哪一页开始读取。
+            topPage: 最大读取到哪一页。
+
+        Returns:
+            无返回值。
+
+        Raises:
+            # 未实现
+            NavigatorRangeError: 当topPage低于basePage时抛出
+        """
+        baseCount = len(self.LiveRoomList)
+        keyWord = self.SearchMsg.get('keyword')
+        targets = self.SearchMsg.get('targets')
+        # 循环构筑协程
+        for area in targets:
+            target = area.get('url')
+            for page in range(basePage, topPage+1):
+                self.TaskList.append(self.EventLoop.create_task(
+                    self.LoadPage(target, page, keyWord, headers)))
+        self.EventLoop.run_until_complete(asyncio.wait(self.TaskList))
+
     def Push(self, roomId: str, urId: str, parentId: str, areaId: str, url: str) -> dict:
         dic = {
             'roomid': roomId,
@@ -92,30 +119,3 @@ class Navigator:
                     continue
             except:
                 continue
-
-    def Loads(self, headers='', basePage=1, topPage=3) -> str:
-        """ 加载容器内容的函数
-        函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
-
-        Args:
-            headers: HTTP请求头，本函数中可为空。
-            basePage: 从哪一页开始读取。
-            topPage: 最大读取到哪一页。
-
-        Returns:
-            无返回值。
-
-        Raises:
-            # 未实现
-            NavigatorRangeError: 当topPage低于basePage时抛出
-        """
-        baseCount = len(self.LiveRoomList)
-        keyWord = self.SearchMsg.get('keyword')
-        targets = self.SearchMsg.get('targets')
-        # 循环构筑协程
-        for area in targets:
-            target = area.get('url')
-            for page in range(basePage, topPage+1):
-                self.TaskList.append(self.EventLoop.create_task(
-                    self.LoadPage(target, page, keyWord, headers)))
-        self.EventLoop.run_until_complete(asyncio.wait(self.TaskList))
