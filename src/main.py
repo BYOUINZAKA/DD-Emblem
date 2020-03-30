@@ -27,6 +27,6 @@ if __name__ == '__main__':
     print("可抽奖直播间数量为：%d" % len(navi.LiveRoomList))
     print("用时%ds" % (end-start))
 
-    headers = getMsgFromJsonFile('Headers.json')
+    headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi.EventLoop.run_until_complete(
         navi.EventLoop.create_task(Catcher.Dispose(random.choice(navi.LiveRoomList), headers=headers)))

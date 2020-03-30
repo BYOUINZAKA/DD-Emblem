@@ -1,18 +1,13 @@
 import asyncio
 import time
-import HttpEngine
+import json
+import re
 
+def getMsgFromJsonFile(path: str) -> dict:
+    with open(path, encoding='utf-8') as file:
+        contents = file.read()
+    return json.loads(contents)
 
-async def main():
-    msg = {
-        'roomid': '1420300',
-        'parent_id': '5',
-        'area_id': '192',
-        'ruid': '45280964'
-    }
-    ca = HttpEngine.Catcher()
-    await ca.Dispose(msg)
-
-loop = asyncio.get_event_loop()
-task = loop.create_task(main())
-loop.run_until_complete(task)
+cookie = getMsgFromJsonFile('E:\Python Tools\data\Headers.json').get('Cookie')
+pattern = re.compile(r'bili_jct=(\w*);')
+print(pattern.findall(cookie)[0])

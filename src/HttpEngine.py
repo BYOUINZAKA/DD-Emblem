@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 
 import aiohttp
 
@@ -45,7 +46,7 @@ class Catcher():
         record = {'score': 0, 'values': []}
         roomid = ""
         async with aiohttp.ClientSession() as session:
-            # 第一次请求，调用enable API。
+            # 第一次请求，调用enable，取得权限。
             try:
                 roomid = liverMsg.get('roomid')
                 enableURL = "https://api.live.bilibili.com/av/v1/SuperChat/enable?room_id=%s&parent_area_id=%s&area_id=%s&ruid=%s" % (
@@ -54,7 +55,7 @@ class Catcher():
                 raise KeyError
             async with session.get(enableURL) as enableRes:
                 if enableRes.status == 200:
-                    # 第二次请求，调用check API，得到信息。
+                    # 第二次请求，调用check，取得信息。
                     async with session.get("https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/Check?roomid=%s" % (roomid)) as checkRes:
                         # json_dicts=json.dumps(json.loads(await checkRes.text()),indent=4)
                         # print(json_dicts)
@@ -66,15 +67,19 @@ class Catcher():
                         'score': -1,
                         'values': [{'success': -1, 'message': ("Get request failed. url='%s'" % (enableURL))}]
                     }
+            # CSRF预防值存于cookie中，用正则表达式筛选获取csrf_token
+            pattern = re.compile(r'bili_jct=(\w*);')
+            csrf = pattern.findall(headers.get('Cookie'))[0]
             for msg in senderList:
                 data = {
                     'id': msg.get('id'),
                     'roomid': roomid,
                     'type': msg.get('keyword'),
-                    'csrf_token': '0a9411b47ea484e4a0b26a27a20082d0',
-                    'csrf': '0a9411b47ea484e4a0b26a27a20082d0',
+                    'csrf_token': csrf,
+                    'csrf': csrf,
                     'visit_id': ''
                 }
                 url = "https://api.live.bilibili.com/xlive/lottery-interface/v3/guard/join"
                 async with session.post(url, data=data, headers=headers) as response:
                     print(await response.text())
+        return record
