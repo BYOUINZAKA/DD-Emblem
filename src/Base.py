@@ -52,7 +52,7 @@ class Navigator:
         self.EventLoop = asyncio.get_event_loop()
         self.TaskList = []
 
-    def Loads(self, headers='', basePage=1, topPage=3) -> str:
+    def Loads(self, headers={}, basePage=1, topPage=3) -> str:
         """ 加载容器内容的函数
         函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
 
