@@ -54,6 +54,7 @@ class Catcher():
         senderList = []
         record = {'score': 0, 'values': []}
         roomid = ""
+        headers['Referer'] = liverMsg.get('url')
         async with aiohttp.ClientSession() as session:
             # 第一次请求，调用enable，取得权限。
             try:
@@ -107,8 +108,10 @@ class Catcher():
                                 record.get('values').append(
                                     {'success': -1, 'message': ("Bad post. roomid=%s id=%s" % (roomid, msg.get('id')))})
                                 continue
-                    except:
+                    except Exception as e:
+                        print(e)
                         record.get('values').append(
                             {'success': -1, 'message': ("Time out error. roomid=%s id=%s" % (roomid, msg.get('id')))})
                         continue
+                        # senderList.append(msg)
         return record
