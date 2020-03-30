@@ -12,5 +12,5 @@ class Catcher():
     async def Start(self, navigator: Navigator):
         return 0
 
-    async def Dispose(self, liverMsg) -> bool:
+    async def Get(self, liverMsg) -> bool:
         return 0

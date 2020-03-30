@@ -29,4 +29,4 @@ if __name__ == '__main__':
 
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi.EventLoop.run_until_complete(
-        navi.EventLoop.create_task(Catcher.Dispose(random.choice(navi.LiveRoomList), headers=headers)))
+        navi.EventLoop.create_task(Catcher.Get(random.choice(navi.LiveRoomList), headers=headers)))
