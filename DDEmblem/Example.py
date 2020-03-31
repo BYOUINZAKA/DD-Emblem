@@ -1,13 +1,14 @@
 # 示例代码
 import asyncio
 import json
+import os
 import time
 
 import aiohttp
 
 from Base import Navigator
-from HttpEngine import Receiver
 from Helper import HttpHelper
+from HttpEngine import Receiver
 
 
 def getMsgFromJsonFile(path: str) -> dict:
@@ -46,3 +47,5 @@ if __name__ == '__main__':
         print(i)
 
     print("用时：%ds，共领取：%d点亲密度。" % (end-start, receiver.Record.get('score')))
+
+    os.system('pause')
