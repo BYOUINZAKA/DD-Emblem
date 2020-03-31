@@ -12,7 +12,7 @@ from Helper import HttpHelper
 class Catcher():
     """ 进行抽奖操作的接口类
     通过HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
-    但比较容易失败，并需要录入cookie数据。
+    但有时会失败，并需要录入cookie数据。
     HttpEngine.Catcher的所有接口都与DriverEngine.Catcher的接口完全一致，可以相互替代。
 
     Members:
@@ -54,11 +54,11 @@ class Catcher():
 
     def Start(self, navigator: Navigator, timeout=1):
         """ 统一启动接口
-        接口接受一个Base.Navigator作为参数，并依附于其事件循环，创建任务并管理日志输出。
+        接口接受一个加载完毕的Base.Navigator对象作为参数，并依附于其的事件循环，创建任务并管理日志输出。
         因为B站有舰长抽奖的直播间不会太多，直播高峰期也不过近百，所以这里为每个直播间都申请一个任务。
 
         Args: 
-            navigator: 一个加载完毕的Base.Navigator的对象。
+            navigator: 一个Base.Navigator对象。
             timeout: 超时限制，超过此值会post失败并在日志中加入Time out error信息，默认为1s。
         """
         taskList = []
