@@ -9,11 +9,11 @@ from Base import Navigator
 from Helper import HttpHelper
 
 
-class Reciver():
+class Receiver():
     """ 进行抽奖操作的接口类
     基于HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
     但有时会失败，并需要录入cookie数据。
-    HttpEngine.Reciver的所有接口都与DriverEngine.Reciver的接口完全一致，可以相互替代。
+    HttpEngine.Receiver的所有接口都与DriverEngine.Receiver的接口完全一致，可以相互替代。
 
     Members:
         Record: 记录日志字典，结构为：
@@ -101,6 +101,7 @@ class Reciver():
                 else:
                     HttpHelper.addRecordMsg(
                         self.Record, roomid, "Bad get.", -1)
+                    return
             for msg in senderList:
                 # 生成请求数据
                 data = {
@@ -121,7 +122,7 @@ class Reciver():
                                 response = json.loads(await res.text())
                                 # print(response)
                                 if response.get('code') == 0:  # code=0 时，代表领取成功
-                                    HttpHelper.addRecordMsg(self.Record, roomid, "Succeed.", int(
+                                    HttpHelper.addRecordMsg(self.Record, roomid, "Successful received.", int(
                                         response.get('data').get('award_num')))
                                 else:  # code=400 时，代表已领取
                                     HttpHelper.addRecordMsg(self.Record, roomid,
