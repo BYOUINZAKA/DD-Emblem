@@ -1,10 +1,7 @@
 # 示例代码
-import asyncio
 import json
 import os
 import time
-
-import aiohttp
 
 from Base import Navigator
 from Helper import HttpHelper
@@ -19,7 +16,7 @@ def getMsgFromJsonFile(path: str) -> dict:
 
 if __name__ == '__main__':
     # 读取headers，需要包含Cookie，Content-Length，Referer字段。
-    # 可以使用 HttpHelper.createHeaders() 
+    # 可以使用 HttpHelper.createHeaders()
     # headers = HttpHelper.createHeaders(UserAgent().firefox, "Your cookie")
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
 
