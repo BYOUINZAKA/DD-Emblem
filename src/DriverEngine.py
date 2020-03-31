@@ -5,12 +5,12 @@ import selenium
 from Base import Navigator
 
 
-class Catcher():
+class Reciver():
     def __init__(self):
         super().__init__()
 
-    async def Start(self, navigator: Navigator):
+    def Start(self, navigator: Navigator):
         return 0
 
-    async def Get(self, liverMsg) -> bool:
+    async def Get(self, liverMsg):
         return 0

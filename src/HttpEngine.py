@@ -13,7 +13,7 @@ class Reciver():
     """ 进行抽奖操作的接口类
     通过HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
     但有时会失败，并需要录入cookie数据。
-    HttpEngine.Catcher的所有接口都与DriverEngine.Catcher的接口完全一致，可以相互替代。
+    HttpEngine.Reciver的所有接口都与DriverEngine.Reciver的接口完全一致，可以相互替代。
 
     Members:
         Record: 记录日志字典，结构为：
