@@ -28,5 +28,5 @@ if __name__ == '__main__':
     print("用时%ds" % (end-start))
 
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
-    navi.EventLoop.run_until_complete(
-        navi.EventLoop.create_task(Catcher.Get(random.choice(navi.LiveRoomList), headers=headers)))
+    cat = Catcher(headers)
+    cat.Start(navi)
