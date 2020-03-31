@@ -18,15 +18,22 @@ def getMsgFromJsonFile(path: str) -> dict:
 
 
 if __name__ == '__main__':
+    headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
     start = time.time()
     navi.Loads(topPage=(int(input("输入最大页数："))))
-    end = time.time()
+    '''
     for i in navi.LiveRoomList:
         print(i)
+    '''
     print("可抽奖直播间数量为：%d" % len(navi.LiveRoomList))
-    print("用时%ds" % (end-start))
 
-    headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     cat = Catcher(headers)
     cat.Start(navi)
+    end = time.time()
+    print("共领取：%d" % (cat.Record.get('score')))
+    for i in navi.LiveRoomList:
+        print(i)
+    for i in cat.Record.get('values'):
+        print(i)
+    print("用时%ds" % (end-start))

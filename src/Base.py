@@ -50,7 +50,6 @@ class Navigator:
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
         self.EventLoop = asyncio.get_event_loop()
-        self.TaskList = []
 
     def Loads(self, headers={}, basePage=1, topPage=3) -> str:
         """ 加载容器内容的函数
@@ -74,15 +73,16 @@ class Navigator:
         except:
             raise KeyError
         # 循环构筑协程
+        taskList = []
         for area in targets:
             try:
                 target = area.get('url')
             except:
                 raise KeyError
             for page in range(basePage, topPage+1):
-                self.TaskList.append(self.EventLoop.create_task(
+                taskList.append(self.EventLoop.create_task(
                     self.LoadPage(target, page, keyWord, headers)))
-        self.EventLoop.run_until_complete(asyncio.wait(self.TaskList))
+        self.EventLoop.run_until_complete(asyncio.wait(taskList))
 
     def Push(self, roomId: str, ruId: str, parentId: str, areaId: str, url: str) -> dict:
         dic = {

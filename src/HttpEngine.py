@@ -15,14 +15,36 @@ class Catcher():
     但比较容易失败，并需要录入cookie数据。
     HttpEngine.Catcher的所有接口都与DriverEngine.Catcher的接口完全一致，可以相互替代。
 
+    Members:
+        Record: 记录日志字典，结构为：
+            {
+                'score': int,   # 领取的亲密度的总和。
+                'values: [      # 记录每一次领取的结果序列，元素为字典结构。
+                    {
+                        'success': int, # 领取结果，-1为请求失败，其他结果为取得的亲密度值。
+                        'message': str  # 回复信息，为一个字符串。
+                    }
+                    # ... ...
+                ]
+            }
+        Headers: HTTP请求头，需要包含Cookie，Content-Length，Referer字段。
+        CsrfToken: B站设有csrf防御，此字段为从cookie中读取的csrf_token。
+        EnableURL: enbable接口的地址，为一个格式化字符串。
+        CheckURL: check接口的地址，为一个格式化字符串。
+        PostURL: join接口的地址，用于post领取请求。
     """
 
     def __init__(self, headers: dict):
+        """ 构造器
+        Args: 
+            headers: HTTP请求头，用于post请求，需要包含cookie信息。
+
+        """
+        self.Record = {'score': 0, 'values': []}
+        self.Headers = headers
         self.EnableURL = "https://api.live.bilibili.com/av/v1/SuperChat/enable?room_id=%s&parent_area_id=%s&area_id=%s&ruid=%s"
         self.PostURL = "https://api.live.bilibili.com/xlive/lottery-interface/v3/guard/join"
         self.CheckURL = "https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/Check?roomid=%s"
-        self.Record = {'score': 0, 'values': []}
-        self.Headers = headers
         try:
             # 从cookie中筛选获取csrf_token，用于post操作。
             pattern = re.compile(r'bili_jct=(\w*);')
@@ -31,9 +53,13 @@ class Catcher():
             raise KeyError
 
     def Start(self, navigator: Navigator, timeout=1):
-        """ 启动函数
+        """ 统一启动接口
         接口接受一个Base.Navigator作为参数，并依附于其事件循环，创建任务并管理日志输出。
         因为B站有舰长抽奖的直播间不会太多，直播高峰期也不过近百，所以这里为每个直播间都申请一个任务。
+
+        Args: 
+            navigator: 一个加载完毕的Base.Navigator的对象。
+            timeout: 超时限制，超过此值会post失败并在日志中加入Time out error信息，默认为1s。
         """
         taskList = []
         for liverMsg in navigator.LiveRoomList:
@@ -48,20 +74,6 @@ class Catcher():
 
         Args:
             liverMsg: 直播间数据的字典，结构形如Base.Navigator.LiveRoomList的元素。
-            headers: HTTP请求头，用于post请求，需要包含cookie信息。
-
-        Returns:
-            返回值为一个字典，用于记录领取的日志或是错误日志，结构为。
-            {
-                'score': int,   # 领取的亲密度的结果总和，如果因为请求失败而意外返回，值为-1。
-                'values: [      # 记录每一次领取的结果序列，元素为字典结构。
-                    {
-                        'success': int, # 领取结果，-1为请求失败，其他结果为取得的亲密度值。
-                        'message': str  # 回复信息，为一个字符串。
-                    }
-                    # ... ...
-                ]
-            }
 
         Raises:
             KeyError: 字典结构错误。
@@ -106,7 +118,7 @@ class Catcher():
                         async with session.post(self.PostURL, data=data, headers=self.Headers) as res:
                             if res.status == 200:
                                 response = json.loads(await res.text())
-                                print(response)
+                                # print(response)
                                 if response.get('code') == 0:  # code=0 时，代表领取成功
                                     HttpHelper.addRecordMsg(self.Record, roomid, "Succeed.", int(
                                         response.get('data').get('award_num')))
