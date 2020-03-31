@@ -8,7 +8,7 @@ import time
 import aiohttp
 
 from Base import Navigator
-from HttpEngine import Catcher
+from HttpEngine import Reciver
 
 
 def getMsgFromJsonFile(path: str) -> dict:
@@ -29,12 +29,12 @@ if __name__ == '__main__':
     '''
     print("可抽奖直播间数量为：%d" % len(navi.LiveRoomList))
 
-    cat = Catcher(headers)
-    cat.Start(navi)
+    reciver = Reciver(headers)
+    reciver.Start(navi)
     end = time.time()
-    print("共领取：%d" % (cat.Record.get('score')))
+    print("共领取：%d" % (reciver.Record.get('score')))
     for i in navi.LiveRoomList:
         print(i)
-    for i in cat.Record.get('values'):
+    for i in reciver.Record.get('values'):
         print(i)
     print("用时%ds" % (end-start))

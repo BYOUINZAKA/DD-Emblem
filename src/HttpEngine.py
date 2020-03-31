@@ -9,7 +9,7 @@ from Base import Navigator
 from Helper import HttpHelper
 
 
-class Catcher():
+class Reciver():
     """ 进行抽奖操作的接口类
     通过HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
     但有时会失败，并需要录入cookie数据。
