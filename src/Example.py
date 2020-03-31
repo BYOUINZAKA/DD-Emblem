@@ -15,7 +15,7 @@ def getMsgFromJsonFile(path: str) -> dict:
 
 
 if __name__ == '__main__':
-    # 读取headers
+    # 读取headers，需要包含Cookie，Content-Length，Referer字段。
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
 
@@ -25,8 +25,8 @@ if __name__ == '__main__':
 
     start = time.time()
     navi.Loads(topPage=topPage)     # 加载抽奖名单。
-    receiver = Receiver(headers)    # 将名单送入Receiver类。
-    receiver.Start(navi)            # 启动。
+    receiver = Receiver(headers)    # 将请求头送入Receiver类。
+    receiver.Start(navi)            # 将名单送入Receiver类，启动。
     end = time.time()
 
     # 查看可领取列表。
