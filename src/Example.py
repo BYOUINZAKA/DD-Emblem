@@ -1,3 +1,4 @@
+# 示例代码
 import asyncio
 import json
 import time
@@ -17,6 +18,7 @@ def getMsgFromJsonFile(path: str) -> dict:
 if __name__ == '__main__':
     # 读取headers，需要包含Cookie，Content-Length，Referer字段。
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
+    # 构造Navigator对象需要传入一个字典作为搜索信息，一般使用SearchMsg.json中的内容来构筑。
     navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
 
     # 输入页数，Windows下打开文件限度为509，平均下来为80页。
