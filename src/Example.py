@@ -19,7 +19,8 @@ if __name__ == '__main__':
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
 
-    # 输入页数，Windows下由于打开文件限度为509，平均下来为80页。
+    # 输入页数，Windows下打开文件限度为509，平均下来为80页。
+    # Linux下为1000，平均160左右。
     # 但是由于某些分区的直播数较少，所以设为100也不会有问题。
     topPage = int(input("输入最大页数："))
 

@@ -27,11 +27,11 @@ class Receiver():
                     # ... ...
                 ]
             }
-        Headers: HTTP请求头，需要包含Cookie，Content-Length，Referer字段。
-        CsrfToken: B站设有csrf防御，此字段为从cookie中读取的csrf_token。
-        EnableURL: enbable接口的地址，为一个格式化字符串。
-        CheckURL: check接口的地址，为一个格式化字符串。
-        PostURL: join接口的地址，用于post领取请求。
+        Headers:    HTTP请求头，需要包含Cookie，Content-Length，Referer字段。
+        CsrfToken:  B站设有csrf防御，此字段为从cookie中读取的csrf_token。
+        EnableURL:  enbable接口的地址，为一个格式化字符串。
+        CheckURL:   check接口的地址，为一个格式化字符串。
+        PostURL:    join接口的地址，用于post领取请求。
     """
 
     def __init__(self, headers: dict):
@@ -58,8 +58,8 @@ class Receiver():
         因为B站有舰长抽奖的直播间不会太多，直播高峰期也不过近百，所以这里为每个直播间都申请一个任务。
 
         Args: 
-            navigator: 一个Base.Navigator对象。
-            timeout: 超时限制，超过此值会post失败并在日志中加入Time out error信息，默认为1s。
+            navigator:  一个Base.Navigator对象。
+            timeout:    超时限制，超过此值会post失败并在日志中加入Time out error信息，默认为1s。
         """
         taskList = []
         for liverMsg in navigator.LiveRoomList:

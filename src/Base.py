@@ -8,8 +8,8 @@ class Navigator:
     """ 可抽奖直播间的信息读取和储存的类
 
     Members: 
-        EventLoop: 事件循环。
-        LiveRoomList: 储存抽奖直播间信息的列表，元素皆为一个字典，结构为：
+        EventLoop:      事件循环。
+        LiveRoomList:   储存抽奖直播间信息的列表，元素皆为一个字典，结构为：
             {
                 'roomid': '...',            # 直播间id。
                 'ruid': '...',              # 我也不知道这是什么，似乎是up主的id。
@@ -17,7 +17,7 @@ class Navigator:
                 'area_id': '...'            # 小分区id。
                 'url': "https://xxx/..."    # 直播间链接。
             }
-        SearchMsg: 检索方式信息。 
+        SearchMsg:      检索方式信息。 
 
     Future: 1、区分一个直播间的奖品是否已被成功领取。
             2、识别直播间中抽奖信息的数量和类型。
@@ -55,9 +55,9 @@ class Navigator:
         函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
 
         Args:
-            headers: HTTP请求头，本函数中可为空。
-            basePage: 从哪一页开始读取。
-            topPage: 最大读取到哪一页。
+            headers:    HTTP请求头，本函数中可为空。
+            basePage:   从哪一页开始读取。
+            topPage:    最大读取到哪一页。
 
         Returns:
             无返回值。
