@@ -20,8 +20,9 @@ def getMsgFromJsonFile(path: str) -> dict:
 if __name__ == '__main__':
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
+    topPage = int(input("输入最大页数："))
     start = time.time()
-    navi.Loads(topPage=(int(input("输入最大页数："))))
+    navi.Loads(topPage=topPage)
     '''
     for i in navi.LiveRoomList:
         print(i)
