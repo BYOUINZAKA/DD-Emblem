@@ -6,8 +6,8 @@ import time
 import aiohttp
 
 from Base import Navigator
-from Helper import HttpHelper
 from HttpEngine import Receiver
+from Helper import HttpHelper
 
 
 def getMsgFromJsonFile(path: str) -> dict:
