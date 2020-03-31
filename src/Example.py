@@ -1,10 +1,7 @@
 import asyncio
 import json
-import random
 import time
 
-# import aiofiles
-# 已弃用
 import aiohttp
 
 from Base import Navigator
@@ -18,23 +15,27 @@ def getMsgFromJsonFile(path: str) -> dict:
 
 
 if __name__ == '__main__':
+    # 读取headers
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
     navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
+
+    # 输入页数，Windows下由于打开文件限度为509，平均下来为80页。
+    # 但是由于某些分区的直播数较少，所以设为100也不会有问题。
     topPage = int(input("输入最大页数："))
+
     start = time.time()
-    navi.Loads(topPage=topPage)
-    '''
+    navi.Loads(topPage=topPage)     # 加载抽奖名单。
+    receiver = Receiver(headers)    # 将名单送入Receiver类。
+    receiver.Start(navi)            # 启动。
+    end = time.time()
+
+    # 查看可领取列表。
     for i in navi.LiveRoomList:
         print(i)
-    '''
     print("可抽奖直播间数量为：%d" % len(navi.LiveRoomList))
 
-    receiver = Receiver(headers)
-    receiver.Start(navi)
-    end = time.time()
-    for i in navi.LiveRoomList:
-        print(i)
+    # 领取完毕后浏览日志，也可以同步输出日志。
     for i in receiver.Record.get('values'):
         print(i)
-    print("用时：%ds" % (end-start))
-    print("共领取：%d" % (receiver.Record.get('score')))
+
+    print("用时：%ds，共领取：%d点亲密度。" % (end-start, receiver.Record.get('score')))

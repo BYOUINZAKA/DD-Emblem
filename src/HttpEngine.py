@@ -120,11 +120,12 @@ class Receiver():
                         async with session.post(self.PostURL, data=data, headers=self.Headers) as res:
                             if res.status == 200:
                                 response = json.loads(await res.text())
-                                # print(response)
-                                if response.get('code') == 0:  # code=0 时，代表领取成功
+                                # code=0 时，代表领取成功
+                                if response.get('code') == 0:       
                                     HttpHelper.addRecordMsg(self.Record, roomid, "Successful received.", int(
                                         response.get('data').get('award_num')))
-                                else:  # code=400 时，代表已领取
+                                # code=400 时，代表已领取
+                                else:                               
                                     HttpHelper.addRecordMsg(self.Record, roomid,
                                                             "Already received.", 0)
                             else:
