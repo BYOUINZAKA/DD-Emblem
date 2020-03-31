@@ -7,6 +7,7 @@ import aiohttp
 
 from Base import Navigator
 from HttpEngine import Receiver
+from Helper import HttpHelper
 
 
 def getMsgFromJsonFile(path: str) -> dict:
@@ -17,13 +18,16 @@ def getMsgFromJsonFile(path: str) -> dict:
 
 if __name__ == '__main__':
     # 读取headers，需要包含Cookie，Content-Length，Referer字段。
+    # 可以使用 HttpHelper.createHeaders() 
+    # headers = HttpHelper.createHeaders(UserAgent().firefox, "Your cookie")
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
-    # 构造Navigator对象需要传入一个字典作为搜索信息，一般使用SearchMsg.json中的内容来构筑。
-    navi = Navigator(getMsgFromJsonFile('SearchMsg.json'))
+
+    # 构造Navigator对象需要传入一个字典作为搜索信息，可以使用SearchMsg.json或是HttpHelper.getSearchMsg()
+    navi = Navigator(HttpHelper.getSearchMsg())
 
     # 输入页数，Windows下打开文件限度为509，平均下来为80页。
     # Linux下为1000，平均160左右。
-    # 但是由于某些分区的直播数较少，所以Windows下设为100也不会有问题。
+    # 但是由于某些分区的直播数较少，所以Windows下设在100左右也不会有问题。
     topPage = int(input("输入最大页数："))
 
     start = time.time()
