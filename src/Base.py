@@ -9,7 +9,6 @@ class Navigator:
 
     Members: 
         EventLoop: 事件循环。
-        TaskList: 任务列表。
         LiveRoomList: 储存抽奖直播间信息的列表，元素皆为一个字典，结构为：
             {
                 'roomid': '...',            # 直播间id。
@@ -51,7 +50,7 @@ class Navigator:
         self.SearchMsg = searchMsg
         self.EventLoop = asyncio.get_event_loop()
 
-    def Loads(self, headers={}, basePage=1, topPage=3) -> str:
+    def Loads(self, headers=None, basePage=1, topPage=3) -> str:
         """ 加载容器内容的函数
         函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
 
@@ -64,6 +63,9 @@ class Navigator:
             无返回值。
 
         Raises:
+            ValueError: 
+                页数过多时可能会导致此错误，
+                原因为asyncio调用的select()的打开文件数有限。
             KeyError: SearchMsg的内容有误时抛出。
             NavigatorRangeError: 未实现，当topPage低于basePage时抛出。
         """
@@ -95,7 +97,7 @@ class Navigator:
         self.LiveRoomList.append(dic)
         return dic
 
-    async def LoadPage(self, target, page, keyWord, headers):
+    async def LoadPage(self, target: str, page: int, keyWord: str, headers: dict):
         response = {}
         url = target % (page)
         async with aiohttp.ClientSession() as session:

@@ -6,6 +6,9 @@ from Base import Navigator
 
 
 class Reciver():
+    """ 进行抽奖操作的接口类
+    基于webdriver的方式来完成抽奖操作，未实现。
+    """
     def __init__(self):
         super().__init__()
 

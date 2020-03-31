@@ -32,9 +32,9 @@ if __name__ == '__main__':
     reciver = Reciver(headers)
     reciver.Start(navi)
     end = time.time()
-    print("共领取：%d" % (reciver.Record.get('score')))
     for i in navi.LiveRoomList:
         print(i)
     for i in reciver.Record.get('values'):
         print(i)
-    print("用时%ds" % (end-start))
+    print("用时：%ds" % (end-start))
+    print("共领取：%d" % (reciver.Record.get('score')))

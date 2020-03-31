@@ -11,7 +11,7 @@ from Helper import HttpHelper
 
 class Reciver():
     """ 进行抽奖操作的接口类
-    通过HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
+    基于HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
     但有时会失败，并需要录入cookie数据。
     HttpEngine.Reciver的所有接口都与DriverEngine.Reciver的接口完全一致，可以相互替代。
 
@@ -68,9 +68,10 @@ class Reciver():
         navigator.EventLoop.run_until_complete(asyncio.wait(taskList))
 
     async def Receive(self, liverMsg: dict, timeout):
-        """ 异步HTTP请求亲密度领取接口
-        按照b站的API来看，需要先请求一次权限，第二次请求才能得到舰队抽奖的id，接着再通过id来发出post请求
-        post请求设有csrf防御，需要解析cookie。
+        """ 异步HTTP请求的亲密度领取接口
+        此接口领取一个直播间的所有抽奖。
+        按照b站的API来看，需要先请求一次权限，第二次请求才能得到抽奖信息的id，接着再通过id来发出post请求
+        post请求设有csrf防御，需要用到csrf_token。
 
         Args:
             liverMsg: 直播间数据的字典，结构形如Base.Navigator.LiveRoomList的元素。
@@ -128,6 +129,8 @@ class Reciver():
                             else:
                                 HttpHelper.addRecordMsg(
                                     self.Record, roomid, "Bad post.", -1)
+                                # 请求失败时把信息抛到序列尾择期执行。
+                                senderList.append(msg)
                                 continue
                 except asyncio.TimeoutError as e:
                     # senderList.append(msg)
