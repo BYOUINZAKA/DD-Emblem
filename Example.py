@@ -5,9 +5,7 @@ import time
 
 # from fake_useragent import UserAgent
 
-from ddemblem.Base import Roster
-from ddemblem.Helper import HttpHelper
-from ddemblem.HttpEngine import Receiver
+from ddemblem import Base, Engine
 
 
 def getMsgFromJsonFile(path: str) -> dict:
@@ -22,13 +20,13 @@ if __name__ == '__main__':
     # headers = HttpHelper.createHeaders(UserAgent().firefox, "Your cookie")
     headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
 
-    # 构造Roster对象需要传入一个字典作为搜索信息，可以使用SearchMsg.json或是HttpHelper.getSearchMsg()
-    roster = Roster(HttpHelper.getSearchMsg())
-
     start = time.time()
+    # 构造Roster对象需要传入一个字典作为搜索信息，可以使用SearchMsg.json或是HttpHelper.getSearchMsg()
+    roster = Base.Roster(Base.getSearchMsg())
+
     roster.LoadAll()                    # 加载全部抽奖名单。
     # roster.Loads(basePage, topPage)   # 或是指定加载
-    receiver = Receiver(headers)        # 将请求头送入Receiver类。
+    receiver = Engine.Receiver(headers)        # 将请求头送入Receiver类。
     receiver.Start(roster)              # 将名单送入Receiver类并启动。
     end = time.time()
 

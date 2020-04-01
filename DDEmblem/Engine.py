@@ -5,15 +5,14 @@ import re
 import aiohttp
 import async_timeout
 
+from ddemblem import Base
 from ddemblem.Base import Roster
-from ddemblem.Helper import HttpHelper
 
 
 class Receiver():
     """ 进行抽奖操作的接口类
     基于HTTP请求方式来完成抽奖操作，速度较快，占用内存较少。
     但有时会失败，并需要录入cookie数据。
-    HttpEngine.Receiver的所有接口都与DriverEngine.Receiver的接口完全一致。
 
     Members:
         Record: 记录日志字典，结构为：
@@ -99,7 +98,7 @@ class Receiver():
                         senderList = (json.loads(await checkRes.text())).get('data').get('guard')
                         # print(json.dumps(senderList, indent=2))
                 else:
-                    HttpHelper.addRecordMsg(
+                    Base.addRecordMsg(
                         self.Record, roomid, "Bad get.", -1)
                     return
             for msg in senderList:
@@ -113,7 +112,7 @@ class Receiver():
                     'visit_id': ''
                 }
                 # 在请求头中修改传输长度。
-                self.Headers['Content-Length'] = HttpHelper.getContentLength(
+                self.Headers['Content-Length'] = Base.getContentLength(
                     data)
                 try:
                     with async_timeout.timeout(timeout):
@@ -121,21 +120,21 @@ class Receiver():
                             if res.status == 200:
                                 response = json.loads(await res.text())
                                 # code=0 时，代表领取成功
-                                if response.get('code') == 0:       
-                                    HttpHelper.addRecordMsg(self.Record, roomid, "Successful received.", int(
+                                if response.get('code') == 0:
+                                    Base.addRecordMsg(self.Record, roomid, "Successful received.", int(
                                         response.get('data').get('award_num')))
                                 # code=400 时，代表已领取
-                                else:                               
-                                    HttpHelper.addRecordMsg(self.Record, roomid,
+                                else:
+                                    Base.addRecordMsg(self.Record, roomid,
                                                             "You already received.", 0)
                             else:
                                 # 请求失败时把信息抛到序列尾择期执行。
-                                HttpHelper.addRecordMsg(
+                                Base.addRecordMsg(
                                     self.Record, roomid, "Bad post and try again.", -1)
                                 senderList.append(msg)
                                 continue
                 except asyncio.TimeoutError as e:
                     # senderList.append(msg)
-                    HttpHelper.addRecordMsg(
+                    Base.addRecordMsg(
                         self.Record, roomid, "Time out error.", -1)
                     continue
