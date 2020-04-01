@@ -1,2 +1,2 @@
 # DD-Emblem
-一个用于Bilibili粉丝勋章经验爬取的简单工具
+一个基于aiohttp的Bilibili粉丝勋章升级工具

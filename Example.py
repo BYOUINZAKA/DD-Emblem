@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     roster.LoadAll()                    # 加载全部抽奖名单。
     # roster.Loads(basePage, topPage)   # 或是指定加载
-    receiver = Engine.Receiver(headers)        # 将请求头送入Receiver类。
+    receiver = Engine.Receiver(headers) # 将请求头送入Receiver类。
     receiver.Start(roster)              # 将名单送入Receiver类并启动。
     end = time.time()
 
@@ -36,11 +36,11 @@ if __name__ == '__main__':
     print(roster.Flags)
 
     # 领取日志。
-    for i in receiver.Record.get('values'):
+    for i in receiver.Record['values']:
         print("RoomID: {0:<10} Result: {1:<10} Message: {2:<10}".format(
             i['roomid'], i['success'], i['message']))
 
     print("可领取直播间数量为%d个。\n共领取%d点亲密度。\n总计用时%ds。" %
-          (len(roster.LiveRoomList), receiver.Record.get('score'), end-start))
+          (len(roster.LiveRoomList), receiver.Record['score'], end-start))
 
     os.system('pause')
