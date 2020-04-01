@@ -19,7 +19,7 @@
         },
         {
             "name": "单机",
-            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=6&cate_id=0&area_id=0&sort_type=sort_type_125&page=%d&page_size=30&tag_version=1"
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=6&cate_id=0&area_id=0&sort_type=sort_type_150&page=%d&page_size=30&tag_version=1"
         },
         {
             "name": "绘画",

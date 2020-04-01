@@ -5,7 +5,7 @@ import aiohttp
 
 
 class Roster:
-    """ 可抽奖直播间的信息读取和储存的类
+    """ 用于可抽奖直播间的信息检索和储存
 
     Members: 
         EventLoop:      事件循环。
@@ -52,7 +52,7 @@ class Roster:
         self.Flags = dict(
             zip([d['name'] for d in self.SearchMsg['targets']], len(self.SearchMsg['targets'])*[1000]))
 
-    def Loads(self, headers=None, basePage=1, topPage=3) -> str:
+    def Loads(self, basePage=1, topPage=3, headers=None) -> str:
         """ 加载容器内容的函数
         函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
 
@@ -80,15 +80,25 @@ class Roster:
         # 循环构筑协程
         taskList = []
         for target in targets:
-            name = target.get('name')
-            maxPage = self.Flags.get(name)
+            maxPage = self.Flags.get(target.get('name'))
             for page in range(basePage, topPage+1):
-                if page < maxPage:
+                if page <= maxPage:
                     taskList.append(self.EventLoop.create_task(
                         self.LoadPage(target, page, keyWord, headers)))
                 else:
                     pass
-        self.EventLoop.run_until_complete(asyncio.wait(taskList))
+        if len(taskList) != 0:
+            self.EventLoop.run_until_complete(asyncio.wait(taskList))
+
+    def LoadAll(self, step=50, headers=None):
+        continueable = True
+        page = 1
+        while continueable:
+            for key in self.Flags:
+                continueable = continueable and (page >= self.Flags[key])
+            continueable = not continueable
+            self.Loads(basePage=page, topPage=page+step, headers=headers)
+            page = page+step+1
 
     def Push(self, roomId: str, ruId: str, parentId: str, areaId: str, url: str) -> dict:
         dic = {
@@ -117,7 +127,8 @@ class Roster:
         roomList = response.get('data').get('list')
         # 如果超过了最大页数，接收的roomList的长度则为0。
         if len(roomList) == 0:
-            self.Flags[target.get('name')] = page
+            self.Flags[target.get('name')] = min(
+                page, self.Flags[target.get('name')])
             return False
         # 如果显示正在抽奖的关键字，则读取直播间信息，并根据直播间ID生成链接。
         for roomData in roomList:
