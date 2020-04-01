@@ -35,6 +35,7 @@ if __name__ == '__main__':
     # 可领取列表。
     for i in roster.LiveRoomList:
         print(i)
+    print(roster.Flags)
 
     # 领取日志。
     for i in receiver.Record.get('values'):
@@ -43,6 +44,5 @@ if __name__ == '__main__':
 
     print("可领取直播间数量为%d个。\n共领取%d点亲密度。\n总计用时%ds。" %
           (len(roster.LiveRoomList), receiver.Record.get('score'), end-start))
-    print(roster.Flags)
 
     os.system('pause')
