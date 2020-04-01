@@ -5,8 +5,8 @@ import re
 import aiohttp
 import async_timeout
 
-from Base import Navigator
-from Helper import HttpHelper
+from ddemblem.Base import Roster
+from ddemblem.Helper import HttpHelper
 
 
 class Receiver():
@@ -52,20 +52,20 @@ class Receiver():
         except:
             raise KeyError
 
-    def Start(self, navigator: Navigator, timeout=1):
+    def Start(self, roster: Roster, timeout=1):
         """ 统一启动接口
-        接口接受一个加载完毕的Base.Navigator对象作为参数，并依附于其的事件循环，创建任务并管理日志输出。
+        接口接受一个加载完毕的Base.Roster对象作为参数，并依附于其的事件循环，创建任务并管理日志输出。
         因为B站有舰长抽奖的直播间不会太多，直播高峰期也不过近百，所以这里为每个直播间都申请一个任务。
 
         Args: 
-            navigator:  一个Base.Navigator对象。
+            roster:  一个Base.Roster对象。
             timeout:    超时限制，超过此值会post失败并在日志中加入Time out error信息，默认为1s。
         """
         taskList = []
-        for liverMsg in navigator.LiveRoomList:
-            taskList.append(navigator.EventLoop.create_task(
+        for liverMsg in roster.LiveRoomList:
+            taskList.append(roster.EventLoop.create_task(
                 self.Receive(liverMsg, timeout)))
-        navigator.EventLoop.run_until_complete(asyncio.wait(taskList))
+        roster.EventLoop.run_until_complete(asyncio.wait(taskList))
 
     async def Receive(self, liverMsg: dict, timeout):
         """ 异步HTTP请求的亲密度领取接口
@@ -74,7 +74,7 @@ class Receiver():
         post请求设有csrf防御，需要用到csrf_token。
 
         Args:
-            liverMsg: 直播间数据的字典，结构形如Base.Navigator.LiveRoomList的元素。
+            liverMsg: 直播间数据的字典，结构形如Base.Roster.LiveRoomList的元素。
 
         Raises:
             KeyError: 字典结构错误。
@@ -127,11 +127,11 @@ class Receiver():
                                 # code=400 时，代表已领取
                                 else:                               
                                     HttpHelper.addRecordMsg(self.Record, roomid,
-                                                            "Already received.", 0)
+                                                            "You already received.", 0)
                             else:
-                                HttpHelper.addRecordMsg(
-                                    self.Record, roomid, "Bad post.", -1)
                                 # 请求失败时把信息抛到序列尾择期执行。
+                                HttpHelper.addRecordMsg(
+                                    self.Record, roomid, "Bad post and try again.", -1)
                                 senderList.append(msg)
                                 continue
                 except asyncio.TimeoutError as e:

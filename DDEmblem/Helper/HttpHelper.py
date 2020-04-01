@@ -12,7 +12,7 @@ def addRecordMsg(record: dict, roomid: str, msg: str, success=-1):
         if success != -1:
             record['score'] += success
         record.get('values').append(
-            {'success': success, 'message': ("%s roomid=%s" % (msg, roomid))})
+            {'roomid': roomid, 'success': success, 'message': msg})
     except:
         raise KeyError
 

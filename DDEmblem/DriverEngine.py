@@ -2,7 +2,7 @@ import asyncio
 
 import selenium
 
-from Base import Navigator
+from ddemblem.Base import Roster
 
 
 class Receiver():
@@ -12,7 +12,7 @@ class Receiver():
     def __init__(self):
         super().__init__()
 
-    def Start(self, navigator: Navigator):
+    def Start(self, roster: Roster):
         return 0
 
     async def Receive(self, liverMsg):
