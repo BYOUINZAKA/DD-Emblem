@@ -7,22 +7,20 @@ AUTHOR = "BYOUINZAKA"
 AUTHOR_EMAIL = "2606675531@qq.com"
 URL = "https://github.com/BYOUINZAKA/DD-Emblem"
 VERSION = __import__(PACKAGE).__version__
-with open("README.md", encoding='utf-8') as md:
-    setup(
-        name=NAME,
-        version=VERSION,
-        description=DESCRIPTION,
-        long_description=md.read(),
-        author=AUTHOR,
-        author_email=AUTHOR_EMAIL,
-        license="MIT",
-        url=URL,
-        packages=find_packages(),
-        include_package_data=False,
-        classifiers=[
-            'License :: OSI Approved :: MIT License',
-            'Programming Language :: Python',
-            'Operating System :: OS Independent',
-        ],
-        zip_safe=False,
-    )
+setup(
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    license="MIT",
+    url=URL,
+    packages=find_packages(),
+    include_package_data=True,
+    classifiers=[
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Operating System :: OS Independent',
+    ],
+    zip_safe=False,
+)

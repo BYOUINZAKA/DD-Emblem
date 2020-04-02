@@ -31,14 +31,12 @@ with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as cookie:
 
 打开浏览器登录bilibili后打开开发者模式，刷新B站主页。任找一个带有 Cookie 的请求，最后在 Requests 中复制 Cookie 串即可。
 
-![获取Cookies](https://raw.githubusercontent.com/BYOUINZAKA/DD-Emblem/master/pic/cookie_exp.png)
+[示例](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/pic/cookie_exp.png)
 
 取得Cookie之后，只需要调用库中提供的API即可使用。
 库主要由负责信息检索的 [`Base.Roster`](https://github.com/BYOUINZAKA/DD-Emblem/blob/2e289bfb405748a60e0025704639122812b48c68/DDEmblem/Base.py#L6) 和负责领取奖品的 [`Engine.Receiver`](https://github.com/BYOUINZAKA/DD-Emblem/blob/2e289bfb405748a60e0025704639122812b48c68/DDEmblem/Engine.py#L12) 组成，详细使用方法请参阅 [Demo.py](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/Demo.py)  中的注释。
 
-运行结果：
-
-![预览](https://raw.githubusercontent.com/BYOUINZAKA/DD-Emblem/master/pic/result.png)
+[运行结果](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/pic/result.png)
 
 ## 作者信息
 GitHub：https://github.com/BYOUINZAKA
