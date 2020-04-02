@@ -8,8 +8,9 @@ from fake_useragent import UserAgent
 from ddemblem import Base, Engine
 
 if __name__ == '__main__':
-    with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as file:
-        headers = Base.createHeaders(UserAgent().firefox, file.read())
+    # 读取文件里的cookies字符串构建headers，这里用了fake_useragent来生成随机头。
+    with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as cookie:
+        headers = Base.createHeaders(UserAgent().firefox, cookie.read())
 
     start = time.time()
     # 构造Roster对象需要传入一个字典作为搜索信息，可以使用SearchMsg.json或是HttpHelper.getSearchMsg()
