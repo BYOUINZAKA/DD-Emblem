@@ -17,7 +17,21 @@ class Roster:
                 'url': "https://xxx/..."    # 直播间链接。
             }
         Flags:          记录分区的最大页数，为一个字典。
-        SearchMsg:      检索方式信息。 
+        SearchMsg:      因为每个区的URL不尽相同，所以存储一个表示检索方式信息的字典，需满足以下结构：
+            {
+                "keyword": "XXXX",          # 检索关键词，通常为正在抽奖。
+                "targets": [                # 检索目标的地址列表，一般为bilibili各直播大区。
+                    {
+                        "name": "xxx",
+                        "url": "https://xxx/..."
+                    },
+                    {
+                        "name": "yyy",
+                        "url": "https://yyy/yyy/..."
+                    }
+                    # ...
+                ]
+            }
 
     Todo: 1、区分一个直播间的奖品是否已被成功领取。
             2、识别直播间中抽奖信息的数量和类型。
@@ -28,21 +42,7 @@ class Roster:
         接收一个代表检索方式信息的字典作为参数，并建立空对象。
 
         Args:
-            searchMsg: 描述检索方式的信息，应为一个字典，可通过SearchMsg.json转化所得，并满足以下结构：
-                {
-                    "keyword": "正在抽奖",  # 检索关键词，通常为正在抽奖。
-                    "targets": [    # 检索目标的地址列表，一般为bilibili各直播大区。
-                        {
-                            "name": "xxx",
-                            "url": "https://xxx/..."
-                        },
-                        {
-                            "name": "yyy",
-                            "url": "https://yyy/yyy/..."
-                        }
-                        # ...
-                    ]
-                }
+            searchMsg: 描述检索方式的信息。
 
         Attention: 并不会对searchMsg的格式进行检索或抛出异常。
         """
@@ -184,6 +184,11 @@ def createHeaders(userAgent: str, cookie: str):
 
 
 def getSearchMsg():
+    ''' 返回可以用于构筑Base.Roster的检索信息
+    因为B站各大分区getRoomList接口的URL有着细微的差别，不排除会有改变的可能，所以这里将它独立出来作为一个字典信息。
+
+    Return: 检索信息字典。
+    '''
     return {
         "keyword": "正在抽奖",
         "targets": [

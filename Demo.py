@@ -3,30 +3,21 @@ import json
 import os
 import time
 
-# from fake_useragent import UserAgent
+from fake_useragent import UserAgent
 
 from ddemblem import Base, Engine
 
-
-def getMsgFromJsonFile(path: str) -> dict:
-    with open(path, encoding='utf-8') as file:
-        contents = file.read()
-    return json.loads(contents)
-
-
 if __name__ == '__main__':
-    # 读取headers，需要包含Cookie，Content-Length，Referer字段。
-    # 可以使用 HttpHelper.createHeaders()
-    # headers = HttpHelper.createHeaders(UserAgent().firefox, "Your cookie")
-    headers = getMsgFromJsonFile('E:\Python Tools\data\Headers.json')
+    with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as file:
+        headers = Base.createHeaders(UserAgent().firefox, file.read())
 
     start = time.time()
     # 构造Roster对象需要传入一个字典作为搜索信息，可以使用SearchMsg.json或是HttpHelper.getSearchMsg()
     roster = Base.Roster(Base.getSearchMsg())
 
-    roster.LoadAll()                    # 加载全部抽奖名单。
+    roster.LoadAll(step=80)             # 加载全部抽奖名单，step参数可以在直播高峰期适当调高。
     # roster.Loads(basePage, topPage)   # 或是指定加载
-    receiver = Engine.Receiver(headers) # 将请求头送入Receiver类。
+    receiver = Engine.Receiver(headers)  # 将请求头送入Receiver类。
     receiver.Start(roster)              # 将名单送入Receiver类并启动。
     end = time.time()
 
