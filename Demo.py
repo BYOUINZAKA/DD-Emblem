@@ -8,6 +8,7 @@ from fake_useragent import UserAgent
 from ddemblem import Base, Engine
 
 if __name__ == '__main__':
+    print('开始读取...')
     # 读取文件里的cookies字符串构建headers，这里用了fake_useragent来生成随机头。
     with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as cookie:
         headers = Base.createHeaders(UserAgent().firefox, cookie.read())

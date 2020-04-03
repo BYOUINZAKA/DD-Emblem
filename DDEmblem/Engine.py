@@ -126,7 +126,7 @@ class Receiver():
                                 # code=400 时，代表已领取
                                 else:
                                     Base.addRecordMsg(self.Record, roomid,
-                                                            "You already received.", 0)
+                                                      "You already received.", 0)
                             else:
                                 # 请求失败时把信息抛到序列尾择期执行。
                                 Base.addRecordMsg(
@@ -138,3 +138,14 @@ class Receiver():
                     Base.addRecordMsg(
                         self.Record, roomid, "Time out error.", -1)
                     continue
+
+    def Clear(self):
+        """ 清除日志(仅日志信息)
+        """
+        self.Record.get('values').clear()
+
+    def ClearAll(self):
+        """ 清除日志(包括领取值)
+        """
+        self.Record.get('values').clear()
+        self.Record['score'] = 0
