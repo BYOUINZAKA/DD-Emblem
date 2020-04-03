@@ -12,7 +12,7 @@
 
 接着可以选择安装本项目的包。
 
-`$ pip install ddemblem`.
+`$ pip install ddemblem`
 
 或是直接下载本项目。
 
@@ -22,14 +22,16 @@
 
 下载 [Demo.py](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/Demo.py) 。
 
+[Demo.py](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/Demo.py) 使用了伪装头，如果要运行需要依赖fake_useragent，如果未安装请执行 `$ pip install fake_useragent`
+
 这段代码展示了一次对于全站直播间抽奖信息的检索和领取，并将领取记录打印出来，其中
 ```
-with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as cookie:
+with open(""cookies.txt"", encoding='utf-8') as cookie:
         headers = Base.createHeaders(UserAgent().firefox, cookie.read())
 ```
 读取了一段cookies文本，这是非常重要的一步。获取请求 Cookie 的方法有很多，这里仅介绍最简单的方法。
 
-打开浏览器登录bilibili后打开开发者模式，刷新B站主页。任找一个带有 Cookie 的请求，最后在 Requests 中复制 Cookie 串即可。
+打开浏览器登录bilibili后打开开发者模式，刷新B站主页。任找一个带有 Cookie 的请求，最后在 Requests 中复制 Cookie 串，放入cookies.txt即可。
 
 [示例](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/pic/cookie_exp.png)
 

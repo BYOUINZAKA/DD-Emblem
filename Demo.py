@@ -9,6 +9,7 @@ from ddemblem import Base, Engine
 
 if __name__ == '__main__':
     print('开始读取...')
+    
     # 读取文件里的cookies字符串构建headers，这里用了fake_useragent来生成随机头。
     # 在cookies.txt下提前放入cookie。
     with open("cookies.txt", encoding='utf-8') as cookie:
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 
     roster.LoadAll(step=80)             # 加载全部抽奖名单，step参数可以在直播高峰期适当调高。
     # roster.Loads(basePage, topPage)   # 或是指定加载
-    receiver = Engine.Receiver(headers) # 将请求头送入Receiver类。
+    receiver = Engine.Receiver(headers)  # 将请求头送入Receiver类。
     receiver.Start(roster)              # 将名单送入Receiver类并启动。
     end = time.time()
 
