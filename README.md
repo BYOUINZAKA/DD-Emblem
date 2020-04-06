@@ -42,7 +42,9 @@ with open("cookies.txt", encoding='utf-8') as cookie:
 
 ## 注意事项
 
-虽然本工具的效率较为可观，但经测试表明，在直播高峰期如果频繁的领取大量奖品有小概率导致IP在 https://live.bilibili.com 上短暂被ban，因此可以手动降速，在 `Receiver.Start()` 的参数中引入 `merge` 来提高串行运行的程度以及藉由 `delay` 制造延迟降低领取频率，或是引入 `proxy` 来使用代理。
+虽然本工具的效率较为可观，但经测试表明，在直播高峰期如果频繁的领取大量奖品有小概率导致IP在 https://live.bilibili.com 上短暂被ban，因此可以手动降速。
+
+可以在 `Receiver.Start()` 的参数中引入 `merge` 来提高串行运行的程度以及藉由 `delay` 制造延迟降低领取频率，或是引入 `proxy` 来使用代理。
 
 如果出现不当使用本库导致的后果，本项目不承担任何责任。
 
