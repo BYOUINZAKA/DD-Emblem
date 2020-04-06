@@ -20,9 +20,9 @@ if __name__ == '__main__':
     roster = Roster(ddemblem.GetSearchMsg())
 
     roster.LoadAll(step=80)             # 加载全部抽奖名单，step参数可以在直播高峰期适当调高。
-    print("读取完毕，开始领奖。")
-
     # roster.Loads(basePage, topPage)   # 或是指定加载
+
+    print("读取完毕，开始领奖。")
     # 查看可领取列表。
     # for i in roster.LiveRoomList:
     #     print(i)
