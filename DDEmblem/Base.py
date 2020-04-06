@@ -3,7 +3,8 @@ import json
 
 import aiohttp
 
-class Roster:
+
+class Roster():
     """ 用于可抽奖直播间的信息检索和储存
 
     Members: 
@@ -33,7 +34,7 @@ class Roster:
                 ]
             }
 
-    Todo: 1、区分一个直播间的奖品是否已被成功领取。
+    Todo:   1、区分一个直播间的奖品是否已被成功领取。
             2、识别直播间中抽奖信息的数量和类型。
     """
 
@@ -163,6 +164,16 @@ def addRecordMsg(record: dict, roomid: str, msg: str, success=-1):
             record['score'] += success
         record.get('values').append(
             {'roomid': roomid, 'success': success, 'message': msg})
+    except:
+        raise KeyError
+
+
+def log(file, score: int, roomid: str, msg: str, success=0):
+    if file == None:
+        return
+    try:
+        print("RoomID: {0:<10} Result: {1:<10} Message: {2:<10}".format(
+            roomid, success, msg), file=file)
     except:
         raise KeyError
 
