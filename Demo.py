@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # print(roster.Flags)
 
     receiver = Receiver(headers)        # 将请求头送入Receiver类。
-    receiver.Start(roster, merge=10, delay=0.1)              # 将名单送入Receiver类并启动。
+    receiver.Start(roster)              # 将名单送入Receiver类并启动。
     end = time.time()
 
     print("可领取直播间数量为%d个。\n共领取%d点亲密度。\n总计用时%ds。" %
