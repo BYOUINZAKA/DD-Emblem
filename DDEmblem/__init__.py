@@ -1,4 +1,4 @@
-__version__ = "2020.4.6"
+__version__ = "2020.4.7"
 
 from ddemblem.Base import Roster as Roster
 from ddemblem.Base import createHeaders as CreateHeaders

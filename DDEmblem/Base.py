@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 
 import aiohttp
 
@@ -172,8 +173,8 @@ def log(file, score: int, roomid: str, msg: str, success=0):
     if file == None:
         return
     try:
-        print("RoomID: {0:<10} Result: {1:<10} Message: {2:<10}".format(
-            roomid, success, msg), file=file)
+        print("{0:<10}    RoomID: {1:<10} Result: {2:<5} Message: {3:<10}".format(
+            time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), roomid, success, msg), file=file)
     except:
         raise KeyError
 
