@@ -2,12 +2,15 @@ import asyncio
 import json
 import re
 import sys
+import time
 
 import aiohttp
+import aiohttp.client_exceptions
 import async_timeout
-
 from ddemblem import Base
 from ddemblem.Base import Roster
+
+from fake_useragent import UserAgent
 
 
 class Receiver():
@@ -45,6 +48,7 @@ class Receiver():
         self.EnableURL = "https://api.live.bilibili.com/av/v1/SuperChat/enable?room_id=%s&parent_area_id=%s&area_id=%s&ruid=%s"
         self.PostURL = "https://api.live.bilibili.com/xlive/lottery-interface/v3/guard/join"
         self.CheckURL = "https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/Check?roomid=%s"
+        self.UserAgent = UserAgent()
         try:
             # 从cookie中筛选获取csrf_token，用于post操作。
             pattern = re.compile(r'bili_jct=(\w*);')
@@ -52,15 +56,15 @@ class Receiver():
         except:
             raise KeyError
 
-    def Start(self, roster: Roster, timeout=1, merge=1, delay=0, proxy=None, log=sys.stdout):
+    def Start(self, roster: Roster, timeout=1, merge=1, delay=0, proxy=None, log=sys.stdout, sleep=3, maxretry=10):
         """ 统一启动接口
-        接口接受一个加载完毕的Base.Roster对象作为参数，并依附于其的事件循环，创建任务并管理日志输出。
+        接口接受一个加载完毕的Base.Roster对象作为参数，并依附于其的事件循环，保证与其运行在同一个线程，创建任务并管理日志输出。
         因为B站有舰长抽奖的直播间不会太多，直播高峰期也不过近百，所以这里为每个直播间都申请一个任务。
 
         Args: 
             roster:     一个Base.Roster对象。
             timeout:    超时限制，超过此值会post失败并输出日志。
-            merge:      任务的串行程度，数值越低并发的程度越低，效率越高，一般可以适当提高数字增加运行时间。
+            merge:      任务的串行程度，数值越低并发的程度越高，效率越高，一般可以适当提高数字增加运行时间。
             delay:      请求间的延迟，和merge配合降低运行效率防止IP被ban。
             proxy:      使用代理，默认不使用。
             log:        日志输出目标，为文件对象，默认为sys.stdout。
@@ -70,7 +74,7 @@ class Receiver():
         i = 0
         while i < len(roster.LiveRoomList):
             taskList.append(roster.EventLoop.create_task(
-                self.LinearReceive(roster.LiveRoomList, i, timeout, merge, delay, proxy, log)))
+                self.LinearReceive(roster.LiveRoomList, i, timeout, merge, delay, proxy, log, sleep, maxretry)))
             i += merge
         '''
         for liverMsg in roster.LiveRoomList:
@@ -79,7 +83,7 @@ class Receiver():
         '''
         roster.EventLoop.run_until_complete(asyncio.wait(taskList))
 
-    async def Receive(self, liverMsg: dict, timeout, proxy, log):
+    async def Receive(self, liverMsg: dict, timeout, proxy, log, sleep, maxretry):
         """ 异步亲密度领取接口
         此接口领取一个直播间的所有抽奖。
         按照b站的API来看，需要先请求一次权限，第二次请求才能得到抽奖信息的id，接着再通过id来发出post请求
@@ -96,13 +100,13 @@ class Receiver():
         roomid = ""
         self.Headers['Referer'] = liverMsg.get('url')
         async with aiohttp.ClientSession() as session:
-            # 第一次请求，调用enable，取得权限。
             try:
                 roomid = liverMsg.get('roomid')
                 enableURL = self.EnableURL % (
                     roomid, liverMsg.get('parent_id'), liverMsg.get('area_id'), liverMsg.get('ruid'))
             except:
                 raise KeyError
+            # 第一次请求，调用enable，取得权限。
             async with session.get(enableURL) as enableRes:
                 if enableRes.status == 200:
                     # 第二次请求，调用check，取得信息。
@@ -127,23 +131,25 @@ class Receiver():
                 # 在请求头中修改传输长度。
                 self.Headers['Content-Length'] = Base.getContentLength(
                     data)
+                self.Headers['User-Agent'] = self.UserAgent.random
                 try:
                     with async_timeout.timeout(timeout):
                         async with session.post(self.PostURL, data=data, headers=self.Headers) as res:
                             if res.status == 200:
                                 await asyncio.sleep(0.1)
                                 response = json.loads(await res.text())
-                                # code=0 时，代表领取成功
+                                # code=0 时，代表领取成功。
                                 if response.get('code') == 0:
                                     score = int(response.get(
                                         'data').get('award_num'))
                                     self.Score += score
                                     Base.log(log, self.Score, roomid,
                                              "Successful received.", score)
-                                # code=400 时，代表已领取
+                                # code=400 时，代表已领取过。
                                 elif response.get('code') == 400:
                                     Base.log(log, self.Score, roomid,
                                              "You already received.", 0)
+                                # code=其他值时，直接输出返回的消息。
                                 else:
                                     Base.log(log, self.Score, roomid,
                                              response.get('message'), -1)
@@ -153,16 +159,27 @@ class Receiver():
                                     log, self.Score, roomid, "Bad post and try again.", -1)
                                 senderList.append(msg)
                                 continue
+                except aiohttp.client_exceptions.ClientOSError as e:
+                    # 用于处理远程主机强迫关闭了一个现有的连接的错误，接受错误时责令线程休眠一段时间，把信息抛到队列尾后重试。
+                    Base.log(log, self.Score, roomid,
+                             "Rejected by the target, Retry in %ds" % sleep, -1)
+                    senderList.append(msg)
+                    time.sleep(sleep)
+                    Base.log(
+                        log, self.Score, roomid, "Start to retry", -1)
+                    continue
                 except asyncio.TimeoutError as e:
                     Base.log(
                         log, self.Score, roomid, "Time out error.", -1)
+                    senderList.append(msg)
                     continue
 
-    async def LinearReceive(self, liveRoomList: list, base: int, timeout, merge, delay, proxy, log):
+    async def LinearReceive(self, liveRoomList: list, base: int, timeout, merge, delay, proxy, log, sleep, maxretry):
         top = base+merge
         if top >= len(liveRoomList):
             top = len(liveRoomList)
         for i in range(base, top-1):
-            await self.Receive(liveRoomList[i], timeout, proxy, log)
-            await asyncio.sleep(delay)
-        await self.Receive(liveRoomList[top-1], timeout, proxy, log)
+            await self.Receive(liveRoomList[i], timeout, proxy, log, sleep, maxretry)
+            if delay != 0:
+                await asyncio.sleep(delay)
+        await self.Receive(liveRoomList[top-1], timeout, proxy, log, sleep, maxretry)

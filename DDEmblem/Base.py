@@ -3,6 +3,7 @@ import json
 import time
 
 import aiohttp
+# from fake_useragent import UserAgent
 
 
 class Roster():
@@ -48,13 +49,14 @@ class Roster():
 
         Attention: 并不会对searchMsg的格式进行检索或抛出异常。
         """
+        # self.UserAgent = UserAgent()
         self.LiveRoomList = []
         self.SearchMsg = searchMsg
         self.EventLoop = asyncio.get_event_loop()
         self.Flags = dict(
             zip([d['name'] for d in self.SearchMsg['targets']], len(self.SearchMsg['targets'])*[1000]))
 
-    def Loads(self, basePage=1, topPage=3, headers=None) -> str:
+    def Loads(self, basePage=1, topPage=3) -> str:
         """ 加载容器内容的函数
         函数解析SearchMsg的内容，并按页面（即30个直播间一组）来分配任务列表到事件循环中。
 
@@ -86,20 +88,20 @@ class Roster():
             for page in range(basePage, topPage+1):
                 if page <= maxPage:
                     taskList.append(self.EventLoop.create_task(
-                        self.LoadPage(target, page, keyWord, headers)))
+                        self.LoadPage(target, page, keyWord)))
                 else:
                     pass
         if len(taskList) != 0:
             self.EventLoop.run_until_complete(asyncio.wait(taskList))
 
-    def LoadAll(self, step=50, headers=None):
+    def LoadAll(self, step=50):
         continueable = True
         page = 1
         while continueable:
             for key in self.Flags:
                 continueable = continueable and (page >= self.Flags[key])
             continueable = not continueable
-            self.Loads(basePage=page, topPage=page+step, headers=headers)
+            self.Loads(basePage=page, topPage=page+step)
             page = page+step+1
 
     def Push(self, roomId: str, ruId: str, parentId: str, areaId: str, url: str) -> dict:
@@ -113,12 +115,14 @@ class Roster():
         self.LiveRoomList.append(dic)
         return dic
 
-    async def LoadPage(self, target: dict, page: int, keyWord: str, headers: dict):
+    async def LoadPage(self, target: dict, page: int, keyWord: str):
         response = {}
         try:
             url = target.get('url') % (page)
         except:
             raise KeyError
+        # headers = {'User-Agent': self.UserAgent.random}
+        headers = None
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as res:
                 # 请求成功则拉取Json报文。
@@ -179,17 +183,17 @@ def log(file, score: int, roomid: str, msg: str, success=0):
         raise KeyError
 
 
-def createHeaders(userAgent: str, cookie: str):
+def createHeaders(cookie: str):
     return {
         "Host": "api.live.bilibili.com",
-        "User-Agent": userAgent,
+        "User-Agent": "",
         "Accept": "application/json, text/plain, */*",
         "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
         "Accept-Encoding": "gzip, deflate, br",
         "Content-Type": "application/x-www-form-urlencoded",
         "Content-Length": "",
         "Origin": "https://live.bilibili.com",
-        "Connection": "keep-alive",
+        # "Connection": "keep-alive",
         "Referer": "",
         "Cookie": cookie
     }

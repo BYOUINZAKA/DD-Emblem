@@ -9,6 +9,7 @@
 首先需要安装第三方依赖。
 
 `$ pip install aiohttp`
+`$ pip install fake_useragent`
 
 接着可以选择安装本项目的包。
 
@@ -22,12 +23,11 @@
 
 下载 [Demo.py](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/Demo.py) 。
 
-[Demo.py](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/Demo.py) 使用了伪装头，直接运行需要依赖fake_useragent，如果未安装请执行 `$ pip install fake_useragent`
 
 这段代码展示了一次对于全站直播间抽奖信息的检索和领取，并将领取记录打印出来，其中
 ```
 with open("cookies.txt", encoding='utf-8') as cookie:
-        headers = ddemblem.CreateHeaders(UserAgent().firefox, cookie.read())
+        headers = ddemblem.CreateHeaders(cookie.read())
 ```
 读取了一段cookies文本，这是非常重要的一步。获取请求 Cookie 的方法有很多，这里仅介绍最简单的方法。
 
@@ -42,7 +42,7 @@ with open("cookies.txt", encoding='utf-8') as cookie:
 
 ## 注意事项
 
-虽然本工具的效率较为可观，但经测试表明，在直播高峰期如果频繁的领取大量奖品有小概率导致IP在[哔哩哔哩直播](https://live.bilibili.com)上短暂被ban，如要避免可以手动降速。
+虽然本工具的效率较为可观，但经测试表明，在直播高峰期如果频繁的领取大量奖品有小概率导致IP在 https://link.bilibili.com 开头的域名上短暂被ban，如要避免可以手动降速。
 
 可以在 `Receiver.Start()` 的参数中引入 `merge` 来提高串行运行的程度以及藉由 `delay` 制造延迟降低领取频率，如 `Receiver(headers).Start(roster, merge=10, delay=0.1)`，或是引入 `proxy` 参数来使用代理。
 
