@@ -3,6 +3,7 @@ import json
 import time
 
 import aiohttp
+import async_timeout
 # from fake_useragent import UserAgent
 
 
@@ -81,7 +82,6 @@ class Roster():
             targets = self.SearchMsg.get('targets')
         except:
             raise KeyError
-        # 循环构筑协程
         taskList = []
         for target in targets:
             maxPage = self.Flags.get(target.get('name'))
@@ -123,13 +123,14 @@ class Roster():
             raise KeyError
         # headers = {'User-Agent': self.UserAgent.random}
         headers = None
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as res:
-                # 请求成功则拉取Json报文。
-                if res.status == 200:
-                    response = json.loads(await res.text())
-                else:
-                    return False
+        with async_timeout.timeout(10):
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, headers=headers) as res:
+                    # 请求成功则拉取Json报文。
+                    if res.status == 200:
+                        response = json.loads(await res.text())
+                    else:
+                        return False
         roomList = response.get('data').get('list')
         # 如果超过了最大页数，接收的roomList的长度则为0。
         if len(roomList) == 0:
