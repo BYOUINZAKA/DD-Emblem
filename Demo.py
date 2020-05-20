@@ -2,7 +2,7 @@
 @Author: Hata
 @Date: 2020-03-31 15:53:52
 @LastEditors: Hata
-@LastEditTime: 2020-05-20 10:58:55
+@LastEditTime: 2020-05-20 21:03:11
 @FilePath: \DD-Emblem\Demo.py
 @Description: 
 '''
@@ -19,23 +19,19 @@ def GetSettings():
     # 根据时间选择合适的步长，并发数和延迟。
     hour = time.localtime(time.time()).tm_hour
     if hour <= 23 and hour >= 20:
-        return {'step': 70, 'group': 4, 'delay': 0.1}
+        return (70, 4, 0.1)
     elif hour < 20 and hour >= 17:
-        return {'step': 70, 'group': 5, 'delay': 0.1}
+        return (70, 5, 0.1)
     elif hour < 17 and hour >= 12:
-        return {'step': 50, 'group': 0, 'delay': 0}
+        return (50, 0, 0.0)
     elif hour < 12 and hour >= 3:
-        return {'step': 30, 'group': 0, 'delay': 0}
+        return (30, 0, 0.0)
     else:
-        return {'step': 50, 'group': 8, 'delay': 0.1}
+        return (50, 8, 0.1)
 
 
 if __name__ == '__main__':
-    setting = GetSettings()
-    step = setting["step"]
-    group = setting["group"]
-    delay = setting["delay"]
-
+    step, group, delay = GetSettings()
     print('开始读取...')
 
     # 读取文件里的cookies字符串构建headers，这里用了fake_useragent来生成随机头。

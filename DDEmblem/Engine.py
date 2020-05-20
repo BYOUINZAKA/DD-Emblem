@@ -54,7 +54,11 @@ class Receiver():
             pattern = re.compile(r'bili_jct=(\w*);')
             self.CsrfToken = pattern.findall(self.Headers.get('Cookie'))[0]
         except:
-            raise KeyError
+            try:
+                pattern = re.compile(r'bili_jct=(\w*)$')
+                self.CsrfToken = pattern.findall(self.Headers.get('Cookie'))[0]
+            except:
+                raise KeyError
 
     def Start(self, roster: Roster, timeout=1, merge=1, delay=0, proxy=None, log=sys.stdout, sleep=3, maxretry=10):
         """ 统一启动接口
