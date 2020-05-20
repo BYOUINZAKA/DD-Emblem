@@ -1,3 +1,11 @@
+<!--
+ * @Author: Hata
+ * @Date: 2020-03-28 01:08:54
+ * @LastEditors: Hata
+ * @LastEditTime: 2020-05-20 11:12:44
+ * @FilePath: \DD-Emblem\README.md
+ * @Description: 
+--> 
 # DD-Emblem
 
 ## 简介
@@ -46,7 +54,7 @@ with open("cookies.txt", encoding='utf-8') as cookie:
 
 可以在 `Receiver.Start()` 的参数中引入 `merge` 来提高串行运行的程度以及藉由 `delay` 制造延迟降低领取频率，如 `Receiver(headers).Start(roster, merge=10, delay=0.1)`，或是引入 `proxy` 参数来使用代理。
 
-如果出现使用本库不当导致的后果，本项目不承担任何责任。
+[Demo.py](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/Demo.py) 中演示了如何防止被ban地领取。但还是要注意如果领取的过程被中断，请等待一段时间再重新领取，以及请勿同时启动多个领取程序。
 
 ## 作者信息
 GitHub：https://github.com/BYOUINZAKA
