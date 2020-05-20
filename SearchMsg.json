@@ -3,7 +3,7 @@
     "targets": [
         {
             "name": "娱乐",
-            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=1&cate_id=0&area_id=0&sort_type=sort_type_152&page=%d&page_size=30&tag_version=1"
+            "url": "https://api.live.bilibili.com/room/v3/area/getRoomList?platform=web&parent_area_id=1&cate_id=0&area_id=0&sort_type=income&page=%d&page_size=30&tag_version=1"
         },
         {
             "name": "手游",

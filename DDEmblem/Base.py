@@ -123,14 +123,17 @@ class Roster():
             raise KeyError
         # headers = {'User-Agent': self.UserAgent.random}
         headers = None
-        with async_timeout.timeout(10):
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers) as res:
-                    # 请求成功则拉取Json报文。
-                    if res.status == 200:
-                        response = json.loads(await res.text())
-                    else:
-                        return False
+        try:
+            with async_timeout.timeout(10):
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, headers=headers) as res:
+                        # 请求成功则拉取Json报文。
+                        if res.status == 200:
+                            response = json.loads(await res.text())
+                        else:
+                            return False
+        except asyncio.TimeoutError as e:
+            return False
         roomList = response.get('data').get('list')
         # 如果超过了最大页数，接收的roomList的长度则为0。
         if len(roomList) == 0:

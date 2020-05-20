@@ -1,3 +1,11 @@
+'''
+@Author: Hata
+@Date: 2020-03-31 15:53:52
+@LastEditors: Hata
+@LastEditTime: 2020-05-20 10:58:55
+@FilePath: \DD-Emblem\Demo.py
+@Description: 
+'''
 # 示例代码
 import json
 import os
@@ -39,12 +47,9 @@ if __name__ == '__main__':
     # 构造Roster对象需要传入一个字典作为搜索信息。
     roster = Roster(ddemblem.GetSearchMsg())
 
-    try:
-        roster.LoadAll(step=step)     # 加载全部抽奖名单，step参数可以在直播高峰期适当调高。
-        # roster.Loads(10)
-        print(roster.Flags)
-    except:
-        print("读取时产生错误。")
+    roster.LoadAll(step=step)     # 加载全部抽奖名单，step参数可以在直播高峰期适当调高。
+    # roster.Loads(10)
+    print(roster.Flags)
 
     print("读取完毕，开始领奖。")
     if len(roster.LiveRoomList) > 0:
