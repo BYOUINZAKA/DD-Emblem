@@ -2,7 +2,7 @@
 @Author: Hata
 @Date: 2020-03-31 15:53:52
 @LastEditors: Hata
-@LastEditTime: 2020-05-20 21:03:11
+@LastEditTime: 2020-05-21 21:00:01
 @FilePath: \DD-Emblem\Demo.py
 @Description: 
 '''
@@ -34,7 +34,6 @@ if __name__ == '__main__':
     step, group, delay = GetSettings()
     print('开始读取...')
 
-    # 读取文件里的cookies字符串构建headers，这里用了fake_useragent来生成随机头。
     # 在cookies.txt下提前放入cookie。
     with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as cookie:
         headers = ddemblem.CreateHeaders(cookie.read())
@@ -56,7 +55,7 @@ if __name__ == '__main__':
             marge = 1
         else:
             marge = int(len(roster.LiveRoomList)/group)
-        receiver.Start(roster=roster,       # 防ban启动，保证并发数最大为4，并附有0.1s的延迟来启动。
+        receiver.Start(roster=roster,       # 防ban启动。
                        merge=marge,
                        delay=delay)
         end = time.time()
