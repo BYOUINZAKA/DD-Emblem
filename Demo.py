@@ -2,7 +2,7 @@
 @Author: Hata
 @Date: 2020-03-31 15:53:52
 @LastEditors: Hata
-@LastEditTime: 2020-05-21 21:00:01
+@LastEditTime: 2020-05-22 13:04:43
 @FilePath: \DD-Emblem\Demo.py
 @Description: 
 '''
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     print('开始读取...')
 
     # 在cookies.txt下提前放入cookie。
-    with open("E:\Python Tools\data\cookies.txt", encoding='utf-8') as cookie:
+    with open("cookies.txt", encoding='utf-8') as cookie:
         headers = ddemblem.CreateHeaders(cookie.read())
 
     start = time.time()
