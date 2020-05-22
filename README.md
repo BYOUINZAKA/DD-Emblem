@@ -2,7 +2,7 @@
  * @Author: Hata
  * @Date: 2020-03-28 01:08:54
  * @LastEditors: Hata
- * @LastEditTime: 2020-05-22 13:10:44
+ * @LastEditTime: 2020-05-22 13:14:03
  * @FilePath: \DD-Emblem\README.md
  * @Description: 
 --> 
@@ -12,7 +12,7 @@
 
 本项目是一个基于异步框架 aiohttp 来对 Bilibili 的直播间进行抽奖信息监测和领取的小工具，可以用于自动升级粉丝勋章亲密度。
 
-利用模块提供的接口，只需几秒就可以领取哔哩哔哩全站所有直播间舰长抽奖的亲密度，可以在此基础上随意拓展。
+利用模块提供的接口，只需几秒就可以领取哔哩哔哩全站所有直播间舰长抽奖的亲密度，可以在此基础上随意拓展。 
 ## 安装项目
 首先需要安装第三方依赖。
 
@@ -31,7 +31,6 @@
 ## 使用方法
 
 下载 [Demo.py](https://gitee.com/AnnMaomao/DD-Emblem/blob/master/Demo.py) 。
-
 
 这段代码展示了一次对于全站直播间抽奖信息的检索和领取，并将领取记录打印出来。
 
