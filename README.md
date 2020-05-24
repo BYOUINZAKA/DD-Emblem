@@ -2,7 +2,7 @@
  * @Author: Hata
  * @Date: 2020-03-28 01:08:54
  * @LastEditors: Hata
- * @LastEditTime: 2020-05-22 13:14:03
+ * @LastEditTime: 2020-05-25 04:33:58
  * @FilePath: \DD-Emblem\README.md
  * @Description: 
 --> 
@@ -51,6 +51,8 @@ with open("cookies.txt", encoding='utf-8') as cookie:
 以下是运行预览
 
 ![运行预览](pic\result.png)
+
+详细原理可见[链接](https://zhuanlan.zhihu.com/p/124275224)
 
 ## 注意事项
 
