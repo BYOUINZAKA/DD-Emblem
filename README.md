@@ -2,7 +2,7 @@
  * @Author: Hata
  * @Date: 2020-03-28 01:08:54
  * @LastEditors: Hata
- * @LastEditTime: 2020-05-27 19:32:53
+ * @LastEditTime: 2020-05-27 19:34:42
  * @FilePath: \DD-Emblem\README.md
  * @Description: 
 --> 
@@ -51,6 +51,8 @@ with open("cookies.txt", encoding='utf-8') as cookie:
 以下是运行预览
 
 [运行预览](https://github.com/BYOUINZAKA/DD-Emblem/blob/master/pic/result.png)
+
+详细原理可见[链接](https://zhuanlan.zhihu.com/p/124275224)
 
 详细原理可见[链接](https://zhuanlan.zhihu.com/p/124275224)
 
